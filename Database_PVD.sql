@@ -65,3 +65,54 @@ CREATE TABLE bill (
     CONSTRAINT fk_article_bill FOREIGN KEY (BIArticleID)
         REFERENCES article (ArticleID)
 )  ENGINE=INNODB;
+CREATE TABLE IF NOT EXISTS `user` (
+	Username VARCHAR(31) NOT NULL,
+    UCreatedDate DATE NOT NULL,
+    ULastLogin DATE NOT NULL,
+    UName VARCHAR(255) NOT NULL,
+    UBirthDate DATE NOT NULL,
+    Utype VARCHAR (100) NOT NULL,
+    UHasedPassword VARCHAR (255) NOT NULL,
+    PRIMARY KEY (Username)
+) ENGINE = INNODB;
+CREATE TABLE IF NOT EXISTS reader (
+	RUserName VARCHAR(31) NOT NULL,
+    RTotalViewedArticles INT,
+    CONSTRAINT fk_user_reader FOREIGN KEY (RUserName)
+        REFERENCES `user` (UserName)
+) ENGINE = INNODB;
+CREATE TABLE IF NOT EXISTS follow (
+	RUserName VARCHAR (31) NOT NULL,
+    AUserName VARCHAR (31) NOT NULL,
+    FStartDate DATE NOT NULL,
+    CONSTRAINT fk_reader_follow FOREIGN KEY (RUserName)
+		REFERENCES reader (RUserName),
+	CONSTRAINT fk_author_follow FOREIGN KEY (AUserName)
+		REFERENCES author (AUserName)
+) ENGINE = INNODB;
+CREATE TABLE IF NOT EXISTS `comment` (
+	CommentID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    CPostDate DATE NOT NULL,
+    CContent VARCHAR (500),
+    PublishedArticleID INT NOT NULL,
+    RUserName VARCHAR (31) NOT NULL,
+    CTotalLikes INT,
+    CTotalReplies INT,
+    ParentCommentID INT
+) ENGINE = INNODB;
+CREATE TABLE IF NOT EXISTS comment_edit (
+	CommentID INT NOT NULL,
+    CEditDate DATE,
+    CEditContent VARCHAR (500),
+    CONSTRAINT fk_comment_edit FOREIGN KEY (CommentID)
+		REFERENCES `comment` (CommentID)
+) ENGINE = INNODB;
+CREATE TABLE IF NOT EXISTS comment_like (
+	CommentID INT NOT NULL,
+    RUserName VARCHAR (31) NOT NULL,
+    CONSTRAINT fk_comment_like_id FOREIGN KEY (CommentID)
+		REFERENCES `comment` (CommentID),
+	CONSTRAINT fk_comment_like_reader FOREIGN KEY (RUserName)
+		REFERENCES reader (RUserName)
+) ENGINE = INNODB;
+
