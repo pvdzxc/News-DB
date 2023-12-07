@@ -37,7 +37,6 @@ CREATE TABLE IF NOT EXISTS `user` (
     PRIMARY KEY (Username)
 ) ENGINE = INNODB;
 
-
 CREATE TABLE IF NOT EXISTS accountant (
     AccountantID INT NOT NULL,
 	AcTotalApprovedBills INT default 0,
@@ -72,7 +71,7 @@ CREATE TABLE IF NOT EXISTS author (
     ATotalView INT DEFAULT 0,
     ATotalLike INT DEFAULT 0,
     ATotalFollower INT DEFAULT 0,
-    ARank ENUM('Bronze','Silver', 'Gold', 'Platinum'),
+    ARank ENUM('Bronze','Silver', 'Gold', 'Platinum') DEFAULT 'Bronze',
     CONSTRAINT fk_employee_author FOREIGN KEY (AuthorID)
         REFERENCES employee (EmployeeID),
     CONSTRAINT fk_user_author FOREIGN KEY (AUsername)
@@ -148,18 +147,18 @@ CREATE TABLE IF NOT EXISTS PublishedArticle (
 ) ENGINE=INNODB;
 
 CREATE TABLE IF NOT EXISTS Review_log (
-    ArticleID INT,
-    ReviewPhase INT,
-    ReviewContent TEXT,
+    ArticleID INT NOT NULL,
+    ReviewPhase INT NOT NULL,
+    ReviewContent TEXT NOT NULL,
     ReviewDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (ArticleID, ReviewPhase),
     FOREIGN KEY (ArticleID) REFERENCES Article(ArticleID)
 ) ENGINE=INNODB;
 
 CREATE TABLE IF NOT EXISTS Edit_log (
-    ArticleID INT,
-    EditPhase INT,
-    EditContent TEXT,
+    ArticleID INT NOT NULL,
+    EditPhase INT NOT NULL,
+    EditContent TEXT NOT NULL,
     EditDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (ArticleID, EditPhase),
     FOREIGN KEY (ArticleID) REFERENCES Article(ArticleID)
