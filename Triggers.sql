@@ -2,6 +2,10 @@ USE newspaper_database;
 DROP TRIGGER IF EXISTS before_insert_employee;
 DROP TRIGGER IF EXISTS before_insert_Edit_log;
 DROP TRIGGER IF EXISTS before_insert_Review_log;
+<<<<<<< Updated upstream
+=======
+DROP TRIGGER IF EXISTS InsertBill_AfterInsertPublishedArticle;
+>>>>>>> Stashed changes
 DROP TRIGGER IF EXISTS InsertPublishedArticle_AfterUpdateArticle;
 DROP TRIGGER IF EXISTS UpdateETotalReviewedArticles_AfterUpdateArticle;
 DROP TRIGGER IF EXISTS after_insert_Edit_log;
@@ -35,6 +39,7 @@ BEGIN
 	END IF; 
 END;
 
+<<<<<<< Updated upstream
 CREATE TRIGGER after_insert_bill 
 AFTER INSERT ON bill
 FOR EACH ROW 
@@ -43,6 +48,8 @@ BEGIN
     SET BUnpaidAmount = NEW.BTotalAmount
     WHERE BillID = NEW.BillID;
 END;
+=======
+>>>>>>> Stashed changes
 //
 DELIMITER ;
 
@@ -58,7 +65,11 @@ BEGIN
     INTO ArStat
     FROM Article
     WHERE ArticleID = NEW.ArticleID;
+<<<<<<< Updated upstream
 	IF ArStat != 'Wait' THEN 	
+=======
+	IF ArStat != 'Edit' THEN 	
+>>>>>>> Stashed changes
 		SIGNAL SQLSTATE '45000'
 		SET MESSAGE_TEXT = 'The Article is not in the Edit Phase!';
 	END IF; 
@@ -79,7 +90,11 @@ BEGIN
     INTO ArStat
     FROM Article
     WHERE ArticleID = NEW.ArticleID;
+<<<<<<< Updated upstream
 	IF ArStat != 'Upload' AND ArStat != 'Edit' THEN 	
+=======
+	IF ArStat <> 'Upload' AND ArStat <> 'Wait' THEN 	
+>>>>>>> Stashed changes
 		SIGNAL SQLSTATE '45000'
 		SET MESSAGE_TEXT = 'The Article is not in the Review Phase!';
 	END IF; 
@@ -90,6 +105,7 @@ DELIMITER ;
 
 DELIMITER //
 
+<<<<<<< Updated upstream
 CREATE TRIGGER after_insert_Edit_log
 AFTER INSERT ON Edit_log 
 FOR EACH ROW 
@@ -119,6 +135,16 @@ BEGIN
     SET ArStatus = 'Edit'
     WHERE ArticleID = NEW.ArticleID;
 END;
+=======
+-- CREATE TRIGGER UpdateArStatus_AfterInsertReviewLog 
+-- AFTER INSERT ON Review_log
+-- FOR EACH ROW
+-- BEGIN
+--     UPDATE Article
+--     SET ArStatus = 'Edit'
+--     WHERE ArticleID = NEW.ArticleID;
+-- END;
+>>>>>>> Stashed changes
 
 CREATE TRIGGER UpdateArStatus_AfterInsertEditLog
 AFTER INSERT ON Edit_log
@@ -277,7 +303,11 @@ BEGIN
     -- Calculate the number of published articles for the corresponding author
     SELECT COUNT(*) INTO author_published_articles
     FROM PublishedArticle
+<<<<<<< Updated upstream
     JOIN Article ON PublishedArticle.ArticleID = Article.ArticleID
+=======
+    JOIN Article ON PublishedArticle.PublishedArticleID = Article.ArticleID
+>>>>>>> Stashed changes
     WHERE Article.AuthorID = author_articles;
 
     -- Update the ATotalPublishedArticles in Author
@@ -305,7 +335,11 @@ BEGIN
     -- Calculate the total views for the corresponding author
     SELECT SUM(ArTotalViews) INTO author_total_views
     FROM PublishedArticle
+<<<<<<< Updated upstream
     JOIN Article ON PublishedArticle.ArticleID = Article.ArticleID
+=======
+    JOIN Article ON PublishedArticle.PublishedArticleID = Article.ArticleID
+>>>>>>> Stashed changes
     WHERE Article.AuthorID = author_articles;
 
     -- Update the ATotalViews in Author
@@ -333,7 +367,11 @@ BEGIN
     -- Calculate the total views for the corresponding author
     SELECT SUM(ArTotalLikes) INTO author_total_likes
     FROM PublishedArticle
+<<<<<<< Updated upstream
     JOIN Article ON PublishedArticle.ArticleID = Article.ArticleID
+=======
+    JOIN Article ON PublishedArticle.PublishedArticleID = Article.ArticleID
+>>>>>>> Stashed changes
     WHERE Article.AuthorID = author_articles;
 
     -- Update the ATotalViews in Author
@@ -361,7 +399,11 @@ BEGIN
     -- Calculate the total views for the corresponding author
     SELECT SUM(ArTotalShares) INTO author_total_shares
     FROM PublishedArticle
+<<<<<<< Updated upstream
     JOIN Article ON PublishedArticle.ArticleID = Article.ArticleID
+=======
+    JOIN Article ON PublishedArticle.PublishedArticleID = Article.ArticleID
+>>>>>>> Stashed changes
     WHERE Article.AuthorID = author_articles;
 
     -- Update the ATotalViews in Author
@@ -511,6 +553,10 @@ BEGIN
     DECLARE coefficient_value INT;
     DECLARE AuthorIDval TEXT;
     DECLARE AuthorRank TEXT;
+<<<<<<< Updated upstream
+=======
+    DECLARE ResponseAccountantID INT;
+>>>>>>> Stashed changes
 	SELECT AuthorID
     INTO AuthorIDval
     FROM Article
@@ -532,12 +578,20 @@ BEGIN
 
     -- Retrieve GPaymentMultiplier from corresponding Genre
     SELECT GPaymentMultiplier INTO coefficient_value
+<<<<<<< Updated upstream
     FROM PublishedArticle
     JOIN Genre ON PublishedArticle.GenreID = Genre.GenreID
     WHERE PublishedArticle.PublishedArticleID = NEW.PublishedArticleID;
     
     INSERT INTO Bill (BPayDate, BTotalAmount, BRemainAmount, BAccountantID, PublishedArticleID)
     VALUES (NULL, unit_value * coefficient_value, unit_value * coefficient_value, accountant_bill, NEW.PublishedArticleID);
+=======
+    FROM Genre
+    JOIN Article ON Article.GenreID = Genre.GenreID AND Article.ArticleID = NEW.PublishedArticleID;
+    SELECT FindAQuiteFreeAccountant() INTO ResponseAccountantID;
+    INSERT INTO Bill (BPayDate, BTotalAmount, BRemainAmount, BAccountantID, PublishedArticleID)
+    VALUES (NULL, unit_value * coefficient_value, unit_value * coefficient_value, ResponseAccountantID, NEW.PublishedArticleID);
+>>>>>>> Stashed changes
     
     
 END;
