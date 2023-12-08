@@ -188,6 +188,37 @@ END //
 
 DELIMITER ;
 
+DELIMITER //
+CREATE PROCEDURE ProcUpdateBill(
+IN BID INT,
+IN PayAmount INT
+)
+BEGIN
+	DECLARE RemainAmount INT;
+	SELECT BRemainAmount
+    INTO RemainAmount
+    FROM BILL
+    WHERE BillID = BID;
+    IF RemainAmount = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'The Bill is already completed';
+	END IF;
+    IF PayAmount > RemainAmount THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'The Amount is too much';
+	END IF;
+    IF PayAmount < 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Insufficient Amount';
+	END IF;
+    START TRANSACTION;
+        UPDATE Bill
+        SET BRemainAmount = RemainAmount - PayAmount
+        WHERE BillID = BID;
+	COMMIT;
+END;
+//
+DELIMITER ;
 -- DELIMITER //
 -- CREATE PROCEDURE ProcDeleteEditLog(
 -- 	IN ArID INT,

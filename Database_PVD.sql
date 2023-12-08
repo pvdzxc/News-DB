@@ -1,15 +1,6 @@
 DROP DATABASE IF EXISTS newspaper_database;
 CREATE DATABASE IF NOT EXISTS newspaper_database CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE newspaper_database;
-<<<<<<< Updated upstream
-
--- DROP TABLE BILL;
--- DROP TABLE AUTHOR;
--- DROP TABLE Manager;
--- DROP TABLE Editor;
--- DROP TABLE accountant;
-
-=======
 DROP TABLE IF EXISTS Accountant;
 DROP TABLE IF EXISTS Article;
 DROP TABLE IF EXISTS Attach;
@@ -42,7 +33,6 @@ DROP TABLE IF EXISTS Manager;
 DROP TABLE IF EXISTS Editor;
 DROP TABLE IF EXISTS accountant;
 
->>>>>>> Stashed changes
 CREATE TABLE IF NOT EXISTS Newspaper_department (
     BranchID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     DAddress VARCHAR(255) NOT NULL,
