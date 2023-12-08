@@ -1,0 +1,98 @@
+const Data = [
+    {
+        articleID: 1,
+        arTitle: "Luxurious Downtown Apartment",
+        arContent:
+          "Experience opulent city living in our luxurious downtown apartment, located in the heart of the bustling metropolis. This sophisticated residence boasts modern amenities and elegant design, offering residents an unparalleled urban lifestyle. The spacious interiors feature high-end finishes, floor-to-ceiling windows, and panoramic views of the city skyline.",
+        price: 200,
+        location: "Downtown, City Center",
+        score: 4.9,
+        imgUrl:
+        "https://images.unsplash.com/photo-1504253163759-c23fccaebb55?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8fA%3D%3D",
+        aUsername: "Luxury Living Management",
+        arPublishDate: "2023-11-27",
+      },
+      {
+        articleID: 2,
+        arTitle: "Tranquil Suburban Retreat",
+        arContent:
+          "Escape to our tranquil suburban retreat, an idyllic sanctuary nestled in a serene neighborhood. This charming property offers a perfect blend of modern comfort and natural beauty. Surrounded by lush greenery, the residence provides a peaceful atmosphere, making it an ideal home for those seeking a quiet and rejuvenating lifestyle.",
+        price: 120,
+        location: "Suburbia, Tranquil Lane",
+        score: 4.7,
+        imgUrl:
+        "https://images.unsplash.com/photo-1504253163759-c23fccaebb55?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8fA%3D%3D",
+        aUsername: "Serene Homes Realty",
+        arPublishDate: "2023-11-26",
+      },
+      {
+        articleID: 3,
+        arTitle: "Modern Urban Loft",
+        arContent:
+          "Step into the future with our modern urban loft, a cutting-edge living space that redefines contemporary city living. This sleek and stylish loft features open-concept design, industrial accents, and state-of-the-art appliances. Residents can enjoy the vibrant energy of the city while experiencing the ultimate in modern comfort.",
+        price: 180,
+        location: "Urban Hub, Tech District",
+        score: 4.8,
+        imgUrl:
+          "https://images.unsplash.com/photo-1560807707-8cc77767d783?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8fA%3D%3D",
+        aUsername: "TechLife Properties",
+        arPublishDate: "2023-11-25",
+      },
+    {
+        articleID: 4,
+        arTitle: "Căn hộ chung cư cao cấp",
+        arContent: "Căn hộ đẳng cấp với view đẹp, nội thất sang trọng, tiện ích đầy đủ.",
+        price: 150,
+        location: "Quận 2, TP HCM",
+        score: 4.8,
+        imgUrl: "https://images.unsplash.com/photo-1504253163759-c23fccaebb55?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8fA%3D%3D",
+        aUsername: "Chủ căn hộ XYZ",
+        arPublishDate: "2023-11-25",
+    },
+    {
+        articleID: 5,
+        arTitle: "Nhà trọ ở Quận 1",
+        arContent: "Nhà trọ tại khu vực trung tâm, gần công viên, thuận tiện đi lại.",
+        price: 100,
+        location: "Quận 1, TP HCM",
+        score: 4.5,
+        imgUrl: "https://images.unsplash.com/photo-1504253163759-c23fccaebb55?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8fA%3D%3D",
+        aUsername: "Quản lý nhà trọ ABC",
+        arPublishDate: "2023-11-26",
+    },
+    {
+        articleID: 6,
+        arTitle: "Căn hộ chung cư cao cấp",
+        arContent: "Căn hộ đẳng cấp với view đẹp, nội thất sang trọng, tiện ích đầy đủ.",
+        price: 150,
+        location: "Quận 2, TP HCM",
+        score: 4.8,
+        imgUrl: "https://images.unsplash.com/photo-1504253163759-c23fccaebb55?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8fA%3D%3D",
+        aUsername: "Chủ căn hộ XYZ",
+        arPublishDate: "2023-11-25",
+    },
+    {
+        articleID: 7,
+        arTitle: "Nhà trọ ở Quận 1",
+        arContent: "Nhà trọ tại khu vực trung tâm, gần công viên, thuận tiện đi lại.",
+        price: 100,
+        location: "Quận 1, TP HCM",
+        score: 4.5,
+        imgUrl: "https://images.unsplash.com/photo-1504253163759-c23fccaebb55?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8fA%3D%3D",
+        aUsername: "Quản lý nhà trọ ABC",
+        arPublishDate: "2023-11-26",
+    },
+    {
+        articleID: 8,
+        arTitle: "Căn hộ chung cư cao cấp",
+        arContent: "Căn hộ đẳng cấp với view đẹp, nội thất sang trọng, tiện ích đầy đủ.",
+        price: 150,
+        location: "Quận 2, TP HCM",
+        score: 4.8,
+        imgUrl: "https://images.unsplash.com/photo-1504253163759-c23fccaebb55?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8fA%3D%3D",
+        aUsername: "Chủ căn hộ XYZ",
+        arPublishDate: "2023-11-25",
+    },
+];
+
+export default Data;
