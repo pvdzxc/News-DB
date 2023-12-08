@@ -283,13 +283,8 @@ CREATE TABLE IF NOT EXISTS Interact (
 ) ENGINE = INNODB;
 CREATE TABLE IF NOT EXISTS BankAccount (
 	EmployeeID INT NOT NULL,
-    BankAccount INT NOT NULL,
+    BankAccount varchar(255) NOT NULL,
     PRIMARY KEY (EmployeeID, BankAccount),
     CONSTRAINT fk_employee_bankAccount
 		FOREIGN KEY (EmployeeID) REFERENCES Employee (EmployeeID)
 ) ENGINE = INNODB;
-SHOW TABLES;
-
-
-    
-    
