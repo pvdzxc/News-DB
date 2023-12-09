@@ -21,21 +21,32 @@ CREATE PROCEDURE ProcInsertArticle(
 	IN ArTitle VARCHAR(255),
     IN ArContent TEXT,
     IN Genre VARCHAR(255),
-    IN AuthorID INT
+    IN UName INT
 )
 BEGIN
 	DECLARE Gvalue INT;
+	DECLARE UType INT;
+	DECLARE AID INT;
 	SET Gvalue = -1;
+    SET AID = -1;
     SELECT GenreID
     INTO Gvalue
     FROM genre
     WHERE GTitle = Genre;
 	IF Gvalue = -1 THEN
 		SIGNAL SQLSTATE '45000'
-		SET MESSAGE_TEXT = 'Invalid Genre/ Genre is not found';
+		SET MESSAGE_TEXT = 'Genre Error: Invalid Genre/ Genre not found';
+	END IF;
+    SELECT AuthorID
+    INTO AID
+    FROM Author
+    WHERE AUsername = UName;
+	IF AID = -1 THEN
+		SIGNAL SQLSTATE '45000'
+		SET MESSAGE_TEXT = 'User Error: Author authority unverified';
 	END IF;
     INSERT INTO article (ArTitle, ArContent, GenreID, AuthorID)
-    VALUES (ArTitle, ArContent, Gvalue, AuthorID);
+    VALUES (ArTitle, ArContent, Gvalue, AID);
     
 END;
 
@@ -69,9 +80,29 @@ DELIMITER //
 CREATE PROCEDURE ProcInsertComment(
 	IN ArID INT,
     IN Content TEXT,
-    IN RUName TEXT
+    IN RUName VARCHAR (31)
 )
 BEGIN
+	DECLARE PAID INT;
+	DECLARE UID VARCHAR (31);
+	SET PAID = -1;
+    SET UID = '';
+    SELECT PublishedArticleID
+    INTO PAID
+    FROM PublishedArticle
+    WHERE PublishedArticleID = ArID;
+    SELECT RUserName
+    INTO UID
+    FROM Reader
+    WHERE RUserName = RUName;
+	IF PAID = -1 THEN
+		SIGNAL SQLSTATE '45000'
+		SET MESSAGE_TEXT = '404 Error: Article not found';
+	END IF;
+	IF UID = '' THEN
+		SIGNAL SQLSTATE '45000'
+		SET MESSAGE_TEXT = 'User Error: Reader authority unverified';
+	END IF;
     INSERT INTO comment (PublishedArticleID, CContent, RUserName)
     VALUES (ArID, Content, RUName);
 END;
@@ -79,14 +110,42 @@ END;
 CREATE PROCEDURE ProcInsertCommentReply(
 	IN ArID INT,
     IN Content TEXT,
-    IN RUName TEXT,
+    IN RUName VARCHAR (31),
     IN ParentID INT
 )
 BEGIN
     DECLARE comment_replies INT;
-
-    -- Calculate the CTotalReplies for the corresponding comment
-
+    DECLARE FatherID INT;
+	DECLARE PAID INT;
+	DECLARE UID VARCHAR (31);
+	SET FatherID = -1;
+	SET PAID = -1;
+    SET UID = -1;
+    SELECT CommentID
+    INTO FatherID 
+    FROM Comment
+    WHERE CommentID = ParentID;
+    SELECT PublishedArticleID
+    INTO PAID
+    FROM PublishedArticle
+    WHERE PublishedArticleID = ArID;
+    SELECT RUserName
+    INTO UID
+    FROM Reader
+    WHERE RUserName = RUName;
+	IF FatherID = -1 THEN
+		SIGNAL SQLSTATE '45000'
+		SET MESSAGE_TEXT = '404 Error: Parent Comment not found';
+	END IF;
+	IF PAID = -1 THEN
+		SIGNAL SQLSTATE '45000'
+		SET MESSAGE_TEXT = '404 Error: Article not found';
+	END IF;
+	IF UID = '' THEN
+		SIGNAL SQLSTATE '45000'
+		SET MESSAGE_TEXT = 'User Error: Reader authority unverified';
+	END IF;
+	
     -- Update the CTotalReplies in Comment
     INSERT INTO comment (PublishedArticleID, CContent, RUserName, ParentCommentID)
     VALUES (ArID, Content, RUName, ParentID);
@@ -114,7 +173,17 @@ CREATE PROCEDURE ProcInsertEditLog(
 )
 BEGIN
 	DECLARE NumberOfEditBefore INT;
-
+	DECLARE validArID INT;
+    SET validArID = -1;
+    SELECT ArticleID
+    INTO validArID
+    FROM Article
+    WHERE ArticleID = ArID;
+	IF validArID = -1 THEN
+		SIGNAL SQLSTATE '45000'
+		SET MESSAGE_TEXT = '404 Error: Article not found';
+	END IF;
+    
     SELECT COUNT(*)
     INTO NumberOfEditBefore
     FROM Edit_log
@@ -143,11 +212,26 @@ CREATE PROCEDURE ProcInsertReviewLog(
 BEGIN
 	DECLARE NumberOfReviewBefore INT; 
 	DECLARE EID INT; 
-
+	DECLARE validArID INT;
+    SET validArID = -1;
+    SELECT ArticleID
+    INTO validArID
+    FROM Article
+    WHERE ArticleID = ArID;
+	IF validArID = -1 THEN
+		SIGNAL SQLSTATE '45000'
+		SET MESSAGE_TEXT = '404 Error: Article not found';
+	END IF;
+    
+    SET EID = -1;
 	SELECT EditorID
     INTO EID
     FROM Editor
     WHERE EUsername = Username;
+	IF EID = -1 THEN
+		SIGNAL SQLSTATE '45000'
+		SET MESSAGE_TEXT = 'User Error: Editor authority unverified';
+	END IF;
     SELECT COUNT(*)
     INTO NumberOfReviewBefore
     FROM Review_log
@@ -164,14 +248,14 @@ BEGIN
 		UPDATE Article
 		SET ArStatus = NewArStatus
 		WHERE ArticleID = ArID;
+		UPDATE Article
+        SET EditorID = EID
+        WHERE ArticleID = ArID;
         SELECT 'Insert and Update Successful' AS result;
     ELSE
         SELECT 'Insert Failed' AS result;
     END IF;
     
-    UPDATE Article
-        SET EditorID = EID
-        WHERE ArticleID = ArID;
     
 END;
 //
@@ -184,10 +268,15 @@ IN PayAmount INT
 )
 BEGIN
 	DECLARE RemainAmount INT;
+    SET RemainAmount = -1;
 	SELECT BRemainAmount
     INTO RemainAmount
     FROM BILL
     WHERE BillID = BID;
+    IF RemainAmount = -1 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Bill Not Found';
+	END IF;
     IF RemainAmount = 0 THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'The Bill is already completed';
@@ -217,23 +306,22 @@ CREATE PROCEDURE ProcDeleteBill(
 )
 BEGIN
 	DECLARE RAmount INT;
-	DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        -- Handle errors (rollback transaction, log, etc.)
-        ROLLBACK;
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Error occured when deleting Bill';
-    END;
+    SET RAmount = -1;
     START TRANSACTION;
     SELECT BRemainAmount
     INTO RAmount
     FROM Bill
     WHERE BillID = BID;
-    IF RAmount > 0 THEN
-		ROLLBACK;
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'The Bill is not completly paid';
-    END IF;
+    -- IF RAmount > 0 THEN
+-- 		ROLLBACK;
+--         SIGNAL SQLSTATE '45002'
+--         SET MESSAGE_TEXT = 'The Bill is not completly paid';
+--     END IF;
+--     IF RAmount < 0 THEN
+-- 		ROLLBACK;
+--         SIGNAL SQLSTATE '45002'
+--         SET MESSAGE_TEXT = 'The Bill is not valid';
+--     END IF;
     DELETE FROM Bill WHERE BillID = BID;
     
     COMMIT;
@@ -254,18 +342,15 @@ BEGIN
     BEGIN
         -- Handle errors (rollback transaction, log, etc.)
         ROLLBACK;
-        SIGNAL SQLSTATE '45000'
+        SIGNAL SQLSTATE '45001'
         SET MESSAGE_TEXT = 'Error occured when deleting the Published Article';
     END;
     
-    SELECT CommentID INTO CID
-    FROM comment WHERE PublishedArticleID = ArticleIDval;
     SELECT BillID INTO BID
     FROM Bill WHERE PublishedArticleID = ArticleIDval;
     
     START TRANSACTION;
     CALL ProcDeleteBill(BID);
-    CALL ProcDeleteComment(CID);
     DELETE FROM PublishedArticle WHERE PublishedArticleID = ArticleIDval;
     COMMIT;
 END;
@@ -279,9 +364,9 @@ BEGIN
         -- Handle errors (rollback transaction, log, etc.)
         ROLLBACK;
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'An error occurred during the transaction.';
+        SET MESSAGE_TEXT = 'An error occurred during article delete.';
     END;
-    
+
     START TRANSACTION;
     CALL ProcDeletePublishedArticle(ArticleIDval);
     DELETE FROM Edit_log WHERE ArticleID = ArticleIDval;
@@ -293,6 +378,72 @@ END;
 //
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS GetTotalInteractWithTime;
+DELIMITER //
+CREATE PROCEDURE GetTotalInteractWithTime(
+)
+BEGIN
+    DECLARE done BOOLEAN DEFAULT FALSE;
+    DECLARE done2 BOOLEAN DEFAULT FALSE;
+	DECLARE A INT;
+	DECLARE B TEXT;
+	DECLARE C INT;
+	DECLARE D INT;
+	DECLARE E INT;
+	DECLARE C1 INT;
+	DECLARE D1 INT;
+	DECLARE E1 INT;
+	DECLARE F INT;
+
+    -- Declare a cursor
+    DECLARE myCursor CURSOR FOR SELECT GenreID, GTitle FROM genre;
+    DECLARE myCursor2 CURSOR FOR 
+    SELECT PublishedArticleID, ArTotalViews, ArTotalLikes, ArTotalShares FROM PublishedArticle;
+	
+    -- Declare continue handler
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE, done2 = TRUE;
+
+    OPEN myCursor;
+	DELETE FROM result WHERE TotalLike >= 0;
+	
+    my_loop: LOOP
+        FETCH myCursor INTO A, B;
+
+        -- Break the loop if no more records
+        IF done THEN
+            LEAVE my_loop;
+        END IF;
+		
+        INSERT INTO Result(GenreID, GenreList, TotalView, TotalLike, TotalShare) 
+        VALUE (A, B, 0, 0, 0);
+        
+    END LOOP;
+
+    CLOSE myCursor;
+    SET done2 = FALSE;
+	OPEN myCursor2;
+    
+	my_loop2: LOOP
+        FETCH myCursor2 INTO A, C, D, E;
+		SELECT GenreID INTO F FROM Article WHERE ArticleID = A;
+		SELECT TotalView INTO C1 FROM Result WHERE GenreID = F;
+		SELECT TotalLike INTO D1 FROM Result WHERE GenreID = F;
+		SELECT TotalShare INTO E1 FROM Result WHERE GenreID = F;
+        -- Break the loop if no more records
+        IF done2 THEN
+            LEAVE my_loop2;
+        END IF;
+		UPDATE Result
+        Set TotalView = C1 + C, TotalLike = D1 + D, TotalShare = E1 + E
+        WHERE GenreID = F;
+        
+    END LOOP;
+    
+    CLOSE myCursor2;
+    SELECT * FROM Result;
+END //
+
+DELIMITER ;
 -- DELIMITER //
 -- CREATE PROCEDURE ProcDeleteEditLog(
 -- 	IN ArID INT,

@@ -110,6 +110,13 @@ CREATE TABLE IF NOT EXISTS Genre (
     GPaymentMultiplier FLOAT NOT NULL
 ) ENGINE=INNODB;
 
+CREATE TABLE IF NOT EXISTS Result(
+    GenreID INT,
+    GenreList VARCHAR(127),
+    TotalView INT,
+    TotalLike INT,
+    TotalShare INT
+    );
 -- Create Topic table
 CREATE TABLE IF NOT EXISTS Topic (
     TopicID INT AUTO_INCREMENT PRIMARY KEY,
@@ -141,11 +148,11 @@ CREATE TABLE IF NOT EXISTS Tag (
 ) ENGINE=INNODB;
 
 CREATE TABLE IF NOT EXISTS Label (
-    ArticleID INT,
+    ArticleID INT ,
     TagID INT,
     PRIMARY KEY (ArticleID, TagID),
     CONSTRAINT fk_article_label 
-		FOREIGN KEY (ArticleID) REFERENCES Article(ArticleID),
+		FOREIGN KEY (ArticleID) REFERENCES Article(ArticleID) ON DELETE CASCADE,
     CONSTRAINT fk_tag_label 
 		FOREIGN KEY (TagID) REFERENCES Tag(TagID)
 ) ENGINE=INNODB;
@@ -162,7 +169,7 @@ CREATE TABLE IF NOT EXISTS Attach (
     MediaID INT,
     PRIMARY KEY (ArticleID, MediaID),
     CONSTRAINT fk_article_attach 
-		FOREIGN KEY (ArticleID) REFERENCES Article(ArticleID),
+		FOREIGN KEY (ArticleID) REFERENCES Article(ArticleID) ON DELETE CASCADE,
     CONSTRAINT fk_media_attach 
 		FOREIGN KEY (MediaID) REFERENCES Media(MediaID)
 ) ENGINE=INNODB;
@@ -238,12 +245,12 @@ CREATE TABLE IF NOT EXISTS `Comment` (
     RUserName VARCHAR (31),
     CTotalLikes INT DEFAULT 0,
     CTotalReplies INT DEFAULT 0,
-    ParentCommentID INT DEFAULT NULL,
+    ParentCommentID INT DEFAULT 0,
     CONSTRAINT fk_article_comment 
-		FOREIGN KEY (PublishedArticleID) REFERENCES PublishedArticle (PublishedArticleID),
-	CONSTRAINT fk_reader_comment 
-		FOREIGN KEY (RUserName) REFERENCES Reader (RUserName) ON DELETE SET NULL,	CONSTRAINT fk_comment_reply 
-		FOREIGN KEY (ParentCommentID) REFERENCES `Comment` (CommentID)) ENGINE = INNODB;
+		FOREIGN KEY (PublishedArticleID) REFERENCES PublishedArticle (PublishedArticleID) ON DELETE CASCADE,
+    CONSTRAINT fk_reader_comment 
+		FOREIGN KEY (RUserName) REFERENCES Reader (RUserName) ON DELETE SET NULL
+) ENGINE = INNODB;
 
 CREATE TABLE IF NOT EXISTS Comment_edit (
 	CommentID INT NOT NULL,
