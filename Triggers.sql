@@ -447,20 +447,21 @@ DELIMITER ;
 DELIMITER //
 
 CREATE TRIGGER UpdateCTotalReplies_AfterInsertComment
-AFTER INSERT ON Comment
+AFTER INSERT ON `Comment`
 FOR EACH ROW
 BEGIN
     DECLARE comment_replies INT;
 
     -- Calculate the CTotalReplies for the corresponding comment
     SELECT COUNT(*) INTO comment_replies
-    FROM Comment
-    WHERE ParentCommentID = NEW.CommentID;
-
+    FROM `Comment`
+    WHERE ParentCommentID = NEW.ParentCommentID;
+	SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = ParentCommentID;
     -- Update the CTotalReplies in Comment
-    UPDATE Comment
-    SET CTotalReplies = comment_replies
-    WHERE CommentID = NEW.CommentID;
+    UPDATE `Comment`
+    SET CTotalReplies = comment_replies + 1
+    WHERE CommentID = NEW.ParentCommentID;
 END;
 DROP TRIGGER UpdateCTotalReplies_AfterInsertComment;
 //
