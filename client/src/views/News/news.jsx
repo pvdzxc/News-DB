@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import List from "../../components/List";
-import Data from "./newDataDummy";
+import Data from "./newsDataDummy";
 import { Link } from "react-router-dom";
 //import { getPropertyList } from "../../action/property.action";
 export default function News() {

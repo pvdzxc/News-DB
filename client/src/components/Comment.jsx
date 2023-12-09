@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Data from '../views/News/newDataDummy';
+import Data from '../views/News/newsDataDummy';
 const Comment = () => {
     const [showComments, setShowComments] = useState(false);
 

@@ -54,6 +54,11 @@ const Header = ({ isLoggedIn, userType }) => {
                     <Link to="/editor/news-management">News Management</Link>
               </button>
             </li>
+            <li>
+              <button className="border-15 bg-white text-darkblue font-bold py-2 px-4 rounded">
+                    <Link to="/author/news-upload-history">News Upload History</Link>
+              </button>
+            </li>
             {isLoggedIn ? (
               <li>
                 <button className="border-15 border-darkblue bg-white text-darkblue font-bold py-2 px-4 rounded">
