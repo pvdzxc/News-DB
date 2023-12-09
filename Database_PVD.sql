@@ -235,12 +235,14 @@ CREATE TABLE IF NOT EXISTS `Comment` (
     CPostDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     CContent TEXT,
     PublishedArticleID INT NOT NULL,
-    RUserName VARCHAR (31) NOT NULL,
+    RUserName VARCHAR (31),
     CTotalLikes INT DEFAULT 0,
     CTotalReplies INT DEFAULT 0,
     ParentCommentID INT DEFAULT 0,
     CONSTRAINT fk_article_comment 
-		FOREIGN KEY (PublishedArticleID) REFERENCES PublishedArticle (PublishedArticleID)
+		FOREIGN KEY (PublishedArticleID) REFERENCES PublishedArticle (PublishedArticleID),
+    CONSTRAINT fk_reader_comment 
+		FOREIGN KEY (RUserName) REFERENCES Reader (RUserName) ON DELETE SET NULL
 ) ENGINE = INNODB;
 
 CREATE TABLE IF NOT EXISTS Comment_edit (
@@ -249,14 +251,14 @@ CREATE TABLE IF NOT EXISTS Comment_edit (
     CEditContent VARCHAR (500),
     PRIMARY KEY (CommentID, CEditDate),
     CONSTRAINT fk_comment_edit 
-		FOREIGN KEY (CommentID) REFERENCES `Comment` (CommentID)
+		FOREIGN KEY (CommentID) REFERENCES `Comment` (CommentID) ON DELETE CASCADE
 ) ENGINE = INNODB;
 CREATE TABLE IF NOT EXISTS Comment_like (
 	CommentID INT NOT NULL,
     RUserName VARCHAR (31) NOT NULL,
     PRIMARY KEY (CommentID, RUserName),
     CONSTRAINT fk_comment_like_id 
-		FOREIGN KEY (CommentID) REFERENCES `Comment` (CommentID),
+		FOREIGN KEY (CommentID) REFERENCES `Comment` (CommentID) ON DELETE CASCADE,
 	CONSTRAINT fk_comment_like_reader 
 		FOREIGN KEY (RUserName) REFERENCES Reader (RUserName)
 ) ENGINE = INNODB;

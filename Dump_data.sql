@@ -1,22 +1,32 @@
 use newspaper_database;
  -- DUMP DATA FOR NEWSPAPER DEPARTMENT
+SELECT * FROM Employee;
+SELECT * FROM User;
+DELETE FROM employee WHERE EmployeeID < 100;
+DELETE FROM Author WHERE AuthorID < 100;
+DELETE FROM Editor WHERE EditorID < 100;
+DELETE FROM Accountant WHERE AccountantID < 100;
+DELETE FROM Manager WHERE ManagerID < 100;
+DELETE FROM User WHERE Username <> '';
+DELETE FROM BankAccount WHERE EmployeeID > 0;
+ 
  INSERT INTO Newspaper_department (DAddress, DName) VALUES
     ('Số 1, Phố Chùa Bộc, Đống Đa, Hà Nội', 'Hà Nội'),
     ('Số 15, Đinh Tiên Hoàng, Thừa Thiên Huế', 'Huế'),
     ('Số 10, Lê Lợi, Quận 1, TP.Hồ Chí Minh', 'Hồ Chí Minh');
     
  -- DUMP DATA FOR EMPLOYEE DATA
- INSERT INTO Employee (EEmailAddress, EName, EPhoneNum, EType, EBankAccount, BranchID, EStartDate) VALUES
-    ('tranvanchien@gmail.com', 'Trần Văn Chiến', '123456789', 'Author', '1234567890', 1, '2023-01-01'),
-    ('nguyenthimyhoa4502@gmail.com', 'Nguyễn Thị Mỹ Hoa', '987654321', 'Editor', '0987654321', 2, '2023-02-01'),
-    ('daitrinh@gmail.com', 'Nguyễn Lê Đại Trình', NULL, 'Author', '1111222233334444', 3, '2023-03-01'),
-    ('haovan1918@gmail.com', 'Nguyễn Văn Hảo', '555555555', 'Accountant', '5555444433332222', 1, '2023-04-01'),
-    ('buithuy@gmail.com', 'Bùi Thị Thuỳ', '111111111', 'Author', '5555222233334444', 2, '2023-05-01'),
-    ('trungminh1969@gmail.com', 'Lê Minh Trung', '222222222', 'Editor', '5555111133334444', 3, '2023-06-01'),
-    ('tranthuy2212@gmail.com', 'Châu Thị Thuỷ', '333333333', 'Accountant', '5555222211114444', 1, '2023-07-01'),
-    ('havanman@gmail.com', 'Hà Văn Mẫn', '444444444', 'Manager', '5555222233331111', 2, '2023-08-01'),
-    ('vanduong@email.com', 'Bùi Văn Dương', '7777777777', 'Author', '55552222333344441', 3, '2023-09-01'),
-    ('manhhung2302@email.com', 'Trần Mạnh Hùng', '666666666', 'Author', '55552222333344442', 1, '2023-10-01');
+ INSERT INTO Employee (EmployeeID, EEmailAddress, EName, EPhoneNum, EType, EBankAccount, BranchID, EStartDate) VALUES
+    (1,'tranvanchien@gmail.com', 'Trần Văn Chiến', '0123456789', 'Author', '1234567890', 1, '2023-01-01'),
+    (2,'nguyenthimyhoa4502@gmail.com', 'Nguyễn Thị Mỹ Hoa', '9876543210', 'Editor', '0987654321', 2, '2023-02-01'),
+    (3,'daitrinh@gmail.com', 'Nguyễn Lê Đại Trình', '0000000000', 'Author', '1111222233334444', 3, '2023-03-01'),
+    (4,'haovan1918@gmail.com', 'Nguyễn Văn Hảo', '5555555555', 'Accountant', '5555444433332222', 1, '2023-04-01'),
+    (5,'buithuy@gmail.com', 'Bùi Thị Thuỳ', '1111111111', 'Author', '5555222233334444', 2, '2023-05-01'),
+    (6,'trungminh1969@gmail.com', 'Lê Minh Trung', '2222222222', 'Editor', '5555111133334444', 3, '2023-06-01'),
+    (7,'tranthuy2212@gmail.com', 'Châu Thị Thuỷ', '3333333333', 'Accountant', '5555222211114444', 1, '2023-07-01'),
+    (8,'havanman@gmail.com', 'Hà Văn Mẫn', '4444444444', 'Manager', '5555222233331111', 2, '2023-08-01'),
+    (9,'vanduong@email.com', 'Bùi Văn Dương', '7777777777', 'Author', '55552222333344441', 3, '2023-09-01'),
+    (10,'manhhung2302@email.com', 'Trần Mạnh Hùng', '6666666666', 'Author', '55552222333344442', 1, '2023-10-01');
     
 INSERT INTO `User` (Username, UCreatedDate, ULastLogin, UName, UBirthDate, UType, UHasedPassword) VALUES
     ('chienvan', '2023-01-01', CURRENT_TIMESTAMP, 'Trần Văn Chiến', '1990-05-15', 'Author', 'hashed_password_1'),
