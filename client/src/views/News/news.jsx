@@ -3,21 +3,50 @@ import { FaSearch } from "react-icons/fa";
 import List from "../../components/List";
 import Data from "./newsDataDummy";
 import { Link } from "react-router-dom";
+import axios from "axios";
 //import { getPropertyList } from "../../action/property.action";
 export default function News() {
-  const [propertyList, setPropertyList] = useState([]);
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await getPropertyList();
-  //       setPropertyList(response.data.propertyList);
-  //     } catch (error) {
-  //       console.error('Error fetching property list:', error);
-  //     }
-  //   };
+  const [newsList, setNewsList] = useState([]);
+
+  const [sortValue, setSortValue] = useState("ArPublishDate-DESC");
+  const handleSortChange = (event) => {
+    setSortValue(event.target.value);
+    fetchData();
+  };
+
+  const [searchValue, setSearchValue] = useState("");
+  const handleSearchChange = (event) => {
+    setSearchValue(event.target.value);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    // Call your fetchData function here with searchValue and sortValue
+    fetchData();
+  };
+
+  const fetchData = async () => {
+    const [sort, order] = sortValue.split("-");
+    try {
+      axios
+        .get(
+          `http://localhost:9000/api/news/?search=${searchValue}&sort=${sort}&order=${order}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((response) => {
+          setNewsList(response.data.newsList);
+        });
+    } catch (error) {
+      console.error("Error fetching property list:", error);
+    }
+  };
 
   useEffect(() => {
-    //fetchData();
-    setPropertyList(Data);
+    fetchData();
   }, []);
 
   const customcss = `
@@ -51,44 +80,52 @@ export default function News() {
       }
   }
     `;
+
   return (
     <div className="flex-grow">
-        <div className="flex justify-between top">
-          <div className="flex items-center">
-            <Link to={"/create-news"}>
-              <button className="bg-bluelight hover:bg-blue1 text-white font-bold py-2 px-4 rounded">
-                Create news
-              </button>
-            </Link>
-          </div>
-          <div className="flex items-center text-darkblue search">
-            <form className="flex items-center text-darkblue">
-              <span className="ml-2">
-                <FaSearch className="text-bluelight icon" />
-              </span>
-              <input
-                type="text"
-                className="w-full focus:outline-none"
-                placeholder="Search..."
-              />
-              <select name="sort" className="focus-visible:outline-none">
-                  <option value={'datedes'} defaultChecked>Latest</option>
-                  <option value={'dateacs'} >Oldest</option>
-                  <option value={'viewdes'}>Most View</option>
-                  <option value={'likedes'}>Most Like</option>
-              </select>
-            </form>
-          </div>
+      <div className="flex justify-between top">
+        <div className="flex items-center">
+          <Link to={"/create-news"}>
+            <button className="bg-bluelight hover:bg-blue1 text-white font-bold py-2 px-4 rounded">
+              Create news
+            </button>
+          </Link>
         </div>
-      <div className="flex justify-center">
+        <div className="flex items-center text-darkblue search">
+          <form className="flex items-center text-darkblue" onSubmit={handleSubmit}>
+            <span className="ml-2">
+              <FaSearch className="text-bluelight icon" />
+            </span>
+            <input
+              type="text"
+              className="w-full focus:outline-none"
+              placeholder="Search..."
+              onChange={handleSearchChange}
+            />
+            <select
+              name="sort"
+              className="focus-visible:outline-none"
+              value={sortValue}
+              onChange={handleSortChange}
+            >
+              <option value={"ArPublishDate-DESC"} defaultChecked>
+                Latest
+              </option>
+              <option value={"ArPublishDate-ASC"}>Oldest</option>
+              <option value={"ArTotalViews-DESC"}>Most View</option>
+              <option value={"ArTotalLikes-DESC"}>Most Like</option>
+            </select>
+          </form>
+        </div>
       </div>
+      <div className="flex justify-center"></div>
 
-      {propertyList.length != 0 ? (
-          <List data={propertyList} />
+      {newsList && newsList.length != 0 ? (
+        <List data={newsList} />
       ) : (
-        <p className="flex justify-center">There is no property!!!</p>
+        
+        <p className="flex justify-center">There is no news!!!</p>
       )}
-
       <style>{customcss}</style>
     </div>
   );

@@ -1,6 +1,6 @@
 {
     "scripts": {
-      "server": "node app.js",
+      "server": "node server.js",
       "client": "npm run start --prefix views",
       "start": "concurrently \"npm run server\" \"npm run client\"",
       "dev": "concurrently \"nodemon app.js\" \"npm run client\""
@@ -15,7 +15,7 @@
       "express-session": "^1.17.3",
       "helmet": "^7.0.0",
       "jsonwebtoken": "^9.0.2",
-      "mysql": "^2.18.1",
+      "mysql2": "^3.1.2",
       "universal-cookie": "^6.1.1"
     },
     "devDependencies": {
