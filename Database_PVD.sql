@@ -238,12 +238,12 @@ CREATE TABLE IF NOT EXISTS `Comment` (
     RUserName VARCHAR (31),
     CTotalLikes INT DEFAULT 0,
     CTotalReplies INT DEFAULT 0,
-    ParentCommentID INT DEFAULT 0,
+    ParentCommentID INT DEFAULT NULL,
     CONSTRAINT fk_article_comment 
 		FOREIGN KEY (PublishedArticleID) REFERENCES PublishedArticle (PublishedArticleID),
-    CONSTRAINT fk_reader_comment 
-		FOREIGN KEY (RUserName) REFERENCES Reader (RUserName) ON DELETE SET NULL
-) ENGINE = INNODB;
+	CONSTRAINT fk_reader_comment 
+		FOREIGN KEY (RUserName) REFERENCES Reader (RUserName) ON DELETE SET NULL,	CONSTRAINT fk_comment_reply 
+		FOREIGN KEY (ParentCommentID) REFERENCES `Comment` (CommentID)) ENGINE = INNODB;
 
 CREATE TABLE IF NOT EXISTS Comment_edit (
 	CommentID INT NOT NULL,
