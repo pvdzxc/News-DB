@@ -462,7 +462,7 @@ BEGIN
     SET CTotalReplies = comment_replies
     WHERE CommentID = NEW.CommentID;
 END;
-
+DROP TRIGGER UpdateCTotalReplies_AfterInsertComment;
 //
 DELIMITER ;
 
