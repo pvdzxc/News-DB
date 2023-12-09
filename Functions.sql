@@ -1,4 +1,4 @@
-
+use newspaper_database;
 DROP FUNCTION IF EXISTS FindAQuiteFreeAccountant;
 DELIMITER //
 CREATE FUNCTION FindAQuiteFreeAccountant()
