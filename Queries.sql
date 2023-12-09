@@ -8,17 +8,18 @@ SELECT * FROM review_log;
 SELECT * FROM Bill;
 SELECT * FROM Accountant;
 SELECT * FROM review_log;
+SELECT * FROM User;
 
-DELETE FROM article
-WHERE ArticleID < 69;
-DELETE FROM edit_log
-WHERE ArticleID < 100;
-DELETE FROM review_log
-WHERE ArticleID < 100;
 DELETE FROM Bill
 WHERE BillID < 100;
 DELETE FROM PublishedArticle
 WHERE PublishedArticleID < 100;
+DELETE FROM edit_log
+WHERE ArticleID < 100;
+DELETE FROM review_log
+WHERE ArticleID < 100;
+DELETE FROM article
+WHERE ArticleID < 100;
 
 CALL ProcInsertArticleDebug(69,'Bao luc hoc duong', 'Ban be danh nhau, sut dau chay mau', 'Education', 123);
 CALL ProcInsertArticleDebug(96,'Viet Nam Phong ten lua vao mat troi', 'Sieu tau vu tru Lac Long Quan sau 3 thang di vao quy dao bay tien gan mat troi, hien dang vao qua trinh tien hanh lien ket quy dao xoay quanh mat troi', 'Science', 123);
@@ -29,10 +30,11 @@ CALL ProcInsertReviewLog(69,'Sai trính tả rôif', 'Edit');
 CALL ProcInsertEditLog(69,'123 Bạn bè đánh nhao, sứt đầu chảy máo');
 CALL ProcInsertReviewLog(69,'Thoi m nghi luon di', 'Reject');
 CALL ProcInsertReviewLog(96,'Bai viet hay, 10 diem', 'Accept');
-CALL ProcInsertReviewLog(99,'Nên sửa vài chỗ có vẻ là thiếu', 'Edit');
+CALL ProcInsertReviewLog(99,'Nên sửa vài chỗ có vẻ là thiếu', 'Edit', 'hoamy');
 CALL ProcInsertEditLog(99,'ahihi');
-CALL ProcInsertReviewLog(99,'Thôi cũng được', 'Accept');
+CALL ProcInsertReviewLog(99,'Thôi cũng được', 'Accept', 'hoamy');
 CALL ProcInsertComment(99, 'Ôi hay quá', 'chienvan');
+CALL ProcInsertCommentReply(99, 'Ôi hay quá', 'chienvan', 13);
 -- CALL ProcDeleteComment(6);
 DELETE FROM Edit_log WHERE ArticleID = 99;
 CALL ProcDeleteArticle(99);

@@ -88,12 +88,12 @@ BEGIN
     -- Calculate the CTotalReplies for the corresponding comment
     SELECT COUNT(*) INTO comment_replies
     FROM Comment
-    WHERE ParentCommentID = NEW.CommentID;
+    WHERE ParentCommentID = ParentID;
 
     -- Update the CTotalReplies in Comment
     UPDATE Comment
     SET CTotalReplies = comment_replies
-    WHERE CommentID = NEW.CommentID;
+    WHERE CommentID = ParentID;
     INSERT INTO comment (PublishedArticleID, CContent, RUserName, ParentCommentID)
     VALUES (ArID, Content, RUName, ParentID);
 END;
@@ -137,11 +137,17 @@ END;
 CREATE PROCEDURE ProcInsertReviewLog(
 	IN ArID INT,
     IN ArReviewContent TEXT,
-    IN NewArStatus TEXT
+    IN NewArStatus TEXT,
+    IN Username TEXT
 )
 BEGIN
 	DECLARE NumberOfReviewBefore INT; 
+	DECLARE EID INT; 
 
+	SELECT EditorID
+    INTO EID
+    FROM Editor
+    WHERE EUsername = Username;
     SELECT COUNT(*)
     INTO NumberOfReviewBefore
     FROM Review_log
@@ -162,6 +168,10 @@ BEGIN
     ELSE
         SELECT 'Insert Failed' AS result;
     END IF;
+    
+    UPDATE Article
+        SET EditorID = EID
+        WHERE ArticleID = ArID;
     
 END;
 //
