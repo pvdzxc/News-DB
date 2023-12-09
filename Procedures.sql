@@ -86,16 +86,16 @@ BEGIN
     DECLARE comment_replies INT;
 
     -- Calculate the CTotalReplies for the corresponding comment
+
+    -- Update the CTotalReplies in Comment
+    INSERT INTO comment (PublishedArticleID, CContent, RUserName, ParentCommentID)
+    VALUES (ArID, Content, RUName, ParentID);
     SELECT COUNT(*) INTO comment_replies
     FROM Comment
     WHERE ParentCommentID = ParentID;
-
-    -- Update the CTotalReplies in Comment
     UPDATE Comment
-    SET CTotalReplies = comment_replies
+    SET CTotalReplies = comment_replies 
     WHERE CommentID = ParentID;
-    INSERT INTO comment (PublishedArticleID, CContent, RUserName, ParentCommentID)
-    VALUES (ArID, Content, RUName, ParentID);
 END;
 
 CREATE PROCEDURE ProcDeleteComment(
