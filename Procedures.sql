@@ -32,11 +32,10 @@ BEGIN
 	DECLARE ArID INT;
     DECLARE medID INT;
 	DECLARE TopID INT;
-	DECLARE MediaValid INT;
+	DECLARE MediaID INT;
     SET TopID = -1;
 	SET Gvalue = -1;
     SET AID = -1;
-    SET MediaValid = -1;
     SELECT GenreID
     INTO Gvalue
     FROM genre
@@ -64,13 +63,9 @@ BEGIN
     
     INSERT INTO article (ArTitle, ArContent, GenreID, TopicID, AuthorID)
     VALUES (ArTitle1, ArContent, Gvalue, TopID, AID);
-    SELECT MediaID INTO MediaValid FROM Media WHERE MLink = MediaURL;
-    IF MediaValid = -1 THEN
-		INSERT INTO Media (MLINK)
-		VALUE (MediaURL);
-	END IF;
+    
     SELECT ArticleID INTO ArID FROM Article WHERE ArTitle = ArTitle1 AND AuthorID = AID;
-    SELECT MediaID INTO medID FROM Media WHERE MLINK = MediaURL;
+    Select GetMedia(MediaURL) INTO medID;
     INSERT INTO Attach (ArticleID, MediaID)
     VALUE (ArID, medID);
 END;
@@ -264,8 +259,6 @@ BEGIN
 		SIGNAL SQLSTATE '45000'
 		SET MESSAGE_TEXT = 'Editor Specialize not match';
 	END IF;
-    
-    
     SELECT COUNT(*) INTO NumberOfReviewBefore FROM Review_log WHERE ArticleID = ArID;
 	IF NewArStatus <> 'Accept' AND NewArStatus <> 'Reject' AND NewArStatus <> 'Edit' THEN
 		SIGNAL SQLSTATE '45000'
@@ -345,16 +338,16 @@ BEGIN
     INTO RAmount
     FROM Bill
     WHERE BillID = BID;
-    -- IF RAmount > 0 THEN
--- 		ROLLBACK;
---         SIGNAL SQLSTATE '45002'
---         SET MESSAGE_TEXT = 'The Bill is not completly paid';
---     END IF;
---     IF RAmount < 0 THEN
--- 		ROLLBACK;
---         SIGNAL SQLSTATE '45002'
---         SET MESSAGE_TEXT = 'The Bill is not valid';
---     END IF;
+	IF RAmount > 0 THEN
+		ROLLBACK;
+        SIGNAL SQLSTATE '45002'
+        SET MESSAGE_TEXT = 'The Bill is not completly paid';
+    END IF;
+    IF RAmount < 0 THEN
+	ROLLBACK;
+        SIGNAL SQLSTATE '45002'
+        SET MESSAGE_TEXT = 'The Bill is not valid';
+    END IF;
     DELETE FROM Bill WHERE BillID = BID;
     
     COMMIT;
