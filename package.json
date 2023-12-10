@@ -1,0 +1,15 @@
+{
+    "scripts": {
+        "start": "concurrently \"npm run server\" \"npm run client\"",
+        "server": "cd server && node server.js",
+        "client": "cd client && npm run dev",
+        "dev": "concurrently \"nodemon app.js\" \"npm run client\""
+    },
+    "dependencies": {
+      "concurrently": "^8.2.2"
+    },
+    "devDependencies": {
+      "nodemon": "^3.0.1"
+    }
+  }
+  

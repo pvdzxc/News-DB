@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FaClock, FaFacebook, FaTwitter, FaTelegram } from "react-icons/fa";
-import List from "../../components/List";
-import Data from "./newDataDummy";
+import Data from "./newsDataDummy";
 import { useParams } from "react-router-dom";
 import Comment from "../../components/Comment";
 //import { getPropertyList } from "../../action/property.action";

@@ -7,6 +7,10 @@ import NewsDetail from "../../views/News/newsDetail";
 import CreateNews from "../../views/Author/newsCreate";
 import NewsManagement from "../../views/Editor/newsManagement";
 import NewsReviewDetail from "../../views/Editor/newsReviewDetail";
+import NewsUploadHistory from "../../views/Author/newsUploadHistory";
+import NewsEditDetail from "../../views/Author/newsEditDetail";
+import SignUp from "../../views/Auth/signup";
+import Login from "../../views/Auth/login";
 //end UserLayout layout
 
 
@@ -28,7 +32,12 @@ export default function Router() {
         {path: 'news-detail/:articleID', element: <NewsDetail/>},
         {path: '/create-news', element: <CreateNews/>},
         {path: 'editor/news-management', element: <NewsManagement/>},
-        {path: 'editor/review-details/:articleID', element: <NewsReviewDetail/>}
+        {path: 'editor/review-details/:articleID', element: <NewsReviewDetail/>},
+        {path: 'author/news-upload-history', element: <NewsUploadHistory/>},
+        {path: 'author/edit-details/:articleID', element: <NewsEditDetail/>},
+        {path: 'signup', element: <SignUp/>},
+        {path: 'login', element: <Login/>},
+
       ]
     },
     {

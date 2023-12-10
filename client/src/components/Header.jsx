@@ -1,26 +1,16 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import Cookies from "universal-cookie"
 
-const Header = ({ isLoggedIn, userType }) => {
-  const renderUserOptions = () => {
-
-    if (isLoggedIn) {
-      if (userType === 'admin') {
-        return (
-          <button className="border-15 border-darkblue bg-white hover:text-white text-darkblue font-bold py-2 px-4 rounded">
-            Manage Admin Account
-          </button>
-        );
-      }
-      else {
-        return (
-          <button className="border-15 border-darkblue bg-white hover:text-white text-darkblue font-bold py-2 px-4 rounded">
-            Manage User Account
-          </button>
-        );
-      }
-    }
-    return null;
+const Header = ({isLoggedIn, type}) => {
+  const cookies = new Cookies()
+  const handleLogout = () => {  
+    // Remove the cookies that were previously set
+    cookies.remove('isAuth', { path: '/' });
+    cookies.remove('user', { path: '/' });
+    cookies.remove('type', { path: '/' });
+    cookies.remove('authorID', { path: '/' });
+    window.location.href = "http://localhost:3000/news"
   };
   const customstyle=
   {
@@ -49,30 +39,38 @@ const Header = ({ isLoggedIn, userType }) => {
                     <Link to="/news">News</Link>
               </button>
             </li>
-            <li>
-              <button className="border-15 bg-white text-darkblue font-bold py-2 px-4 rounded">
-                    <Link to="/editor/news-management">News Management</Link>
-              </button>
-            </li>
+            {type=="Editor" &&
+              <li>
+                <button className="border-15 bg-white text-darkblue font-bold py-2 px-4 rounded">
+                      <Link to="/editor/news-management">News Management</Link>
+                </button>
+              </li>
+            }
+            {
+              type=="Author" && 
+              <li>
+                <button className="border-15 bg-white text-darkblue font-bold py-2 px-4 rounded">
+                      <Link to="/author/news-upload-history">News Upload History</Link>
+                </button>
+              </li>
+            }
+            
             {isLoggedIn ? (
               <li>
-                <button className="border-15 border-darkblue bg-white text-darkblue font-bold py-2 px-4 rounded">
-                  Account
+                <button className="border-15 border-darkblue bg-white text-darkblue font-bold py-2 px-4 rounded" onClick={handleLogout}>
+                  Logout
                 </button>
-                <div className="options">
-                  {renderUserOptions()}
-                </div>
               </li>
             ) : (
               <>
                 <li>
                   <button className="border-15 border-darkblue hover:bg-medium hover:text-white bg-white text-darkblue font-bold py-2 px-4 rounded addborder" style={customstyle.addborder}>
-                    <Link to="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Sign Up</Link>
+                    <Link to="signup">Sign Up</Link>
                   </button>
                 </li>
                 <li>
                   <button className="border-15 border-darkblue hover:bg-medium hover:text-white bg-white text-darkblue font-bold py-2 px-4 rounded addborder" style={customstyle.addborder}>
-                    <Link to="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Log In</Link>
+                    <Link to="login">Log In</Link>
                   </button>
                 </li>
               </>
