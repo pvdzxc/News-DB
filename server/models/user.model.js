@@ -72,6 +72,31 @@ async function getUserInformation(username) {
     }
 }
 
+
+async function getAuthorInfo(username){
+  try {
+    // Query the database to get the hashed password for the provided username
+    const [rows] = await connection.execute(
+      'SELECT * FROM author WHERE AUsername = ?',
+      [username]
+    );
+
+    // Check if a user with the provided username exists
+    if (rows.length > 0) {
+      const author = rows[0];
+      return author;
+    } else {
+      // User with the provided username doesn't exist
+      console.log("User not found");
+      return { success: false, message: "User not found" };
+    }
+  } catch (error) {
+    console.error("Error during login:", error);
+    throw error; // You might want to handle the error more gracefully
+  }
+}
+
+
 async function login(username, password) {
     try {
       // Query the database to get the hashed password for the provided username
@@ -88,7 +113,10 @@ async function login(username, password) {
         const passwordMatch = await bcrypt.compare(password, user.UHasedPassword);
   
         if (passwordMatch) {
-          // Passwords match, user is authenticated
+          if(user.UType == 'Author'){
+            const authorInfo = await getAuthorInfo(username);
+            return { success: true, userInfo: user, authorID: authorInfo.AuthorID };
+          }
           console.log("Login successful");
           return { success: true, userInfo: user };
         } else {

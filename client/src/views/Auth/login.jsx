@@ -31,6 +31,9 @@ const Login = () => {
                 cookies.set('isAuth', true, { path: '/' });
                 cookies.set('user', response.data.userInfo.Username, { path: '/' });
                 cookies.set('type', response.data.userInfo.UType, { path: '/' });
+                if (response.data.authorID){
+                    cookies.set('authorID', response.data.authorID, { path: '/' });
+                }
                 console.log("User login successfully");
                 setErr('');
                 window.location.href = "http://localhost:3000/news"
@@ -86,7 +89,7 @@ const Login = () => {
             </div>                
             <div className="flex justify-center">
                 <button type="submit" className="bg-blue-500 text-white p-2 rounded-md">
-                    Sign Up
+                    Login
                 </button>
             </div>
         </form>

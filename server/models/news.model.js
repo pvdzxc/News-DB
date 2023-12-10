@@ -7,21 +7,27 @@ async function getDocList(search, sort, order) {
   try {
     const [result] = await connection.execute(`
     SELECT
-      ArticleID,
-      ArTitle,
-      ArContent,
-      ArPublishDate,
-      ArTotalViews,
-      ArTotalLikes,
-      ArTotalShares
+    A.ArticleID,
+    A.ArTitle,
+    A.ArContent,
+    PA.ArPublishDate,
+    PA.ArTotalViews,
+    PA.ArTotalLikes,
+    PA.ArTotalShares,
+    A.AuthorID,
+    M.MLink
     FROM
-      Article
+        Article A
     JOIN 
-      PublishedArticle ON ArticleID = PublishedArticleID
+        PublishedArticle PA ON A.ArticleID = PA.PublishedArticleID
+    LEFT JOIN
+        Attach AT ON A.ArticleID = AT.ArticleID
+    LEFT JOIN
+        Media M ON AT.MediaID = M.MediaID
       WHERE
-        ArTitle LIKE ?
+        A.ArTitle LIKE ?
       ORDER BY
-        ${sort} ${order};
+        PA.${sort} ${order};
     `, [`%${search}%`]);
 
     // Process the query result
@@ -33,6 +39,26 @@ async function getDocList(search, sort, order) {
   }
 }
 
+async function getNewsGenre(){
+  try {
+    const [result] = await connection.execute(`
+    SELECT * FROM genre
+    `);
+
+    // Process the query result
+    // console.log(result);
+    return result;
+  } catch (error) {
+    console.error('Error executing query:', error);
+    throw error;
+  }
+}
+
+async function addNews(username, title,content,imgURL, genre){
+
+}
+
 module.exports = {
   getDocList,
+  getNewsGenre
 };

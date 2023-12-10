@@ -73,7 +73,7 @@ router.post("/login", async (req, res) => {
     const loginResult = await login(username, password);
 
     if (loginResult.success) {
-      res.json({ success: true, message: "Login successful", userInfo: loginResult.userInfo });
+      res.json({ success: true, message: "Login successful", userInfo: loginResult.userInfo, authorID: loginResult.authorID });
     } else {
       res.json({ success: false, message: "Invalid user credentials" });
     }

@@ -40,6 +40,7 @@ export default function News() {
           }
         )
         .then((response) => {
+          console.log(response.data.newsList)
           setNewsList(response.data.newsList);
         });
     } catch (error) {

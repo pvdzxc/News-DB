@@ -9,6 +9,7 @@ const Header = ({isLoggedIn, type}) => {
     cookies.remove('isAuth', { path: '/' });
     cookies.remove('user', { path: '/' });
     cookies.remove('type', { path: '/' });
+    cookies.remove('authorID', { path: '/' });
     window.location.href = "http://localhost:3000/news"
   };
   const customstyle=

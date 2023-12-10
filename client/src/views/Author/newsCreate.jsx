@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import { useEffect } from 'react';
 
 export default function CreateNews() {
+  const [genre,setGenre] = useState([]);
   const [newsData, setNewsData] = useState({
     title: '',
     content: '',
     imgUrl: '',
+    genre: ''
   });
 
   const handleChange = (e) => {
@@ -17,9 +21,34 @@ export default function CreateNews() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle the form submission, e.g., send data to the server or perform any other action
+    
+
+
+
+
+
+    
     console.log('Form submitted:', newsData);
   };
+
+  useEffect(()=>{
+    try {
+      axios
+        .get(
+          `http://localhost:9000/api/news/news-genre`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((response) => {
+          setGenre(response.data.genre);
+        });
+    } catch (error) {
+      console.error("Error fetching genre list:", error);
+    }
+  },[]);
 
   return (
     <div className=" w-full mx-auto bg-white p-6 border-2 rounded-md shadow-md">
@@ -66,6 +95,25 @@ export default function CreateNews() {
             className="w-full border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
             placeholder="Enter the image URL"
           />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="genre" className="block text-gray-700 text-sm font-bold mb-2">
+            Genre:
+          </label>
+          <select
+            id="genre"
+            name="genre"
+            value={newsData.genre}
+            onChange={handleChange}
+            className="w-full border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
+          >
+            <option value="" disabled>Select a genre</option>
+            {genre.map((genreItem) => (
+              <option key={genreItem.GenreID} value={genreItem.GTitle}>
+                {genreItem.GTitle}
+              </option>
+            ))}
+          </select>
         </div>
         <button
           type="submit"

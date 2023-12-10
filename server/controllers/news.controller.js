@@ -18,10 +18,24 @@ function addPostToDB(data){
     return "abc xyz";
 }
 
+async function getNewsGenre(req,res){
+    try {
+        const result = await news_model.getNewsGenre();
+        if (result.length===0) return res.json({ status: 404 });
+        return res.json({genre: result })
+    } catch (error) {
+        console.log(error);
+        return res.json({ status: 500 });
+    }
+}
 
+async function addNews(req,res){
+    
+}
 
 
 module.exports = {
     getNewsList: getNewsList,
-    addPostToDB: addPostToDB
+    addPostToDB: addPostToDB,
+    getNewsGenre: getNewsGenre,
 }
