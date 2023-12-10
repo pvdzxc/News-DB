@@ -40,7 +40,7 @@ CALL ProcInsertComment(99, 'Ôi hay quá', 'chauminh');
 CALL ProcInsertCommentReply(99, 'Ôi hay quá', 'chauminh', 10);
 -- CALL ProcDeleteComment(6);
 DELETE FROM Edit_log WHERE ArticleID = 99;
-CALL ProcDeleteArticle(99);
+CALL ProcDeleteArticle(12);
     DELETE FROM PublishedArticle WHERE PublishedArticleID = 99;
 DELETE FROM PublishedArticle WHERE ArticleID = ArticleIDval;
     CALL ProcDeletePublishedArticle(99);

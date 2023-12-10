@@ -32,9 +32,11 @@ BEGIN
 	DECLARE ArID INT;
     DECLARE medID INT;
 	DECLARE TopID INT;
+	DECLARE MediaValid INT;
     SET TopID = -1;
 	SET Gvalue = -1;
     SET AID = -1;
+    SET MediaValid = -1;
     SELECT GenreID
     INTO Gvalue
     FROM genre
@@ -62,10 +64,13 @@ BEGIN
     
     INSERT INTO article (ArTitle, ArContent, GenreID, TopicID, AuthorID)
     VALUES (ArTitle1, ArContent, Gvalue, TopID, AID);
-    INSERT INTO Media (MLINK)
-    VALUE (MediaURL);
+    SELECT MediaID INTO MediaValid FROM Media WHERE MLink = MediaURL;
+    IF MediaValid = -1 THEN
+		INSERT INTO Media (MLINK)
+		VALUE (MediaURL);
+	END IF;
     SELECT ArticleID INTO ArID FROM Article WHERE ArTitle = ArTitle1 AND AuthorID = AID;
-    SELECT MediaID INTO medID FROM media WHERE MLINK = MediaURL;
+    SELECT MediaID INTO medID FROM Media WHERE MLINK = MediaURL;
     INSERT INTO Attach (ArticleID, MediaID)
     VALUE (ArID, medID);
 END;
@@ -224,9 +229,6 @@ BEGIN
 		UPDATE Article
 		SET ArStatus = 'Wait'
 		WHERE ArticleID = ArID;
-        SELECT 'Insert and Update Successful' AS result;
-    ELSE
-        SELECT 'Insert Failed' AS result;
     END IF;
 END;
 
@@ -238,8 +240,11 @@ CREATE PROCEDURE ProcInsertReviewLog(
 )
 BEGIN
 	DECLARE NumberOfReviewBefore INT; 
-	DECLARE EID, Spec, ArTopicID INT; 
+	DECLARE EID, Spec, ArTopicID, ArEditPhase INT; 
+    DECLARE ArLastEditContent TEXT;
 	DECLARE validArID INT;
+    SET ArEditPhase = -1;
+    SET ArLastEditContent = '';
     SET validArID = -1;
     SET EID = -1;
     SET Spec = -1;
@@ -274,15 +279,17 @@ BEGIN
 		UPDATE Article
 		SET ArStatus = NewArStatus
 		WHERE ArticleID = ArID;
+        IF NewArStatus = 'Accept' THEN
+			SELECT COUNT(*) INTO ArEditPhase FROM Edit_log WHERE ArticleID = ArID;
+            IF ArEditPhase > 0 THEN
+				SELECT EditContent INTO ArLastEditContent FROM Edit_log WHERE ArticleID = ArID;
+                UPDATE Article SET ArContent = ArLastEditContent WHERE ArticleID = ArID;
+			END IF;
+		END IF;
 		UPDATE Article
         SET EditorID = EID
         WHERE ArticleID = ArID;
-        SELECT 'Insert and Update Successful' AS result;
-    ELSE
-        SELECT 'Insert Failed' AS result;
     END IF;
-    
-    
 END;
 //
 DELIMITER ;
