@@ -12,7 +12,7 @@ async function signUp(username, password, fullname, birthday) {
       INSERT INTO user (Username, UHasedPassword, UName, UBirthDate, UCreatedDate,ULastLogin, UType)
       VALUES (?, ?, ?, ?, ?, ?, ?)
     `,
-      [username, hashPassword, fullname, birthday, new Date(), new Date(), 'Reader' ]
+      [username, hashPassword, fullname, birthday, new Date(), new Date(), 'Author' ]
     );
 
     // Check if the insertion was successful
