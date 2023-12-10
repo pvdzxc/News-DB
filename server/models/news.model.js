@@ -76,6 +76,26 @@ async function getArticleById(articleID){
   }
 }
 
+async function getCommnetOfArticle(articleID){
+  try {
+    const [result] = await connection.execute('call GetRecentCommentThroughArticleID(?)',[articleID]);
+    return result;
+  } catch (error) {
+    console.error('Error executing query:', error);
+    throw error;
+  }
+}
+
+async function addCommentToArticle(articleID,content,username){
+  try {
+    const [result] = await connection.execute('call ProcInsertComment(?,?,?)',[articleID,content,username]);
+    return true;
+  } catch (error) {
+    console.error('Error executing query:', error);
+    throw error;
+  }
+}
+
 async function getNewsGenre(){
   try {
     const [result] = await connection.execute(`
@@ -144,5 +164,7 @@ module.exports = {
   getNewsTopic,
   addNews,
   deleteNews,
-  getArticleById
+  getArticleById,
+  getCommnetOfArticle,
+  addCommentToArticle
 };

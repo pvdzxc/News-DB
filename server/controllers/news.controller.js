@@ -25,8 +25,30 @@ async function getNewsById(req,res){
     }
 }
 
-function addPostToDB(data){
-    return "abc xyz";
+async function getCommentOfNews(req,res){
+    const articleID = req.params.articleID;
+    try {
+        const result = await news_model.getCommnetOfArticle(articleID);
+        if (result.length===0) return res.json({ success: true, length: 0, message: "Article doesn't have comment" });
+        return res.json({success: true, length:result.length, commentList: result })
+    } catch (error) {
+        console.log(error);
+        return res.json({ status: 500 });
+    }
+}
+
+async function addCommentToArticle(req,res){
+    const articleID = req.params.articleID;
+    const content = req.body.content;
+    const username = req.body.username;
+    try {
+        const result = await news_model.addCommentToArticle(articleID,content,username);
+        if (!result) return res.json({ success: false, message: "Can't not add comment to article" });
+        return res.json({success: true, message: "Add comment successfully" })
+    } catch (error) {
+        console.log(error);
+        return res.json({ status: 500 });
+    }
 }
 
 async function getNewsGenre(req,res){
@@ -91,10 +113,11 @@ async function deleteNews(req,res){
 
 module.exports = {
     getNewsList: getNewsList,
-    addPostToDB: addPostToDB,
     getNewsGenre: getNewsGenre,
     getNewsTopic: getNewsTopic,
     createNews: createNews,
     deleteNews: deleteNews,
-    getNewsById: getNewsById
+    getNewsById: getNewsById,
+    getCommentOfNews: getCommentOfNews,
+    addCommentToArticle: addCommentToArticle
 }

@@ -11,6 +11,8 @@ router.get('/news-topic', newsController.getNewsTopic)
 router.post('/createNews', newsController.createNews)
 router.delete('/delete/:articleID', newsController.deleteNews)
 router.get('/detail/:articleID', newsController.getNewsById)
+router.get('/comment/:articleID', newsController.getCommentOfNews)
+router.post('/comment/:articleID', newsController.addCommentToArticle)
 
 //router.post('/addNews', newsController.addNews);
 

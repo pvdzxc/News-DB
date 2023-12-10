@@ -64,7 +64,7 @@ export default function NewsDetail() {
             </div>
 
             <div>
-                <Comment></Comment>
+                <Comment articleID={articleID} />
             </div>
         </div>
     );
