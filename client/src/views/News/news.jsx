@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import List from "../../components/List";
-import Data from "./newsDataDummy";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import Cookies from "universal-cookie"
 //import { getPropertyList } from "../../action/property.action";
 export default function News() {
+  const cookies = new Cookies();
+  const [type,setType] = useState('');
   const [newsList, setNewsList] = useState([]);
 
   const [sortValue, setSortValue] = useState("ArPublishDate-DESC");
@@ -47,6 +49,7 @@ export default function News() {
 
   useEffect(() => {
     fetchData();
+    setType(cookies.get('type'))
   }, []);
 
   const customcss = `
@@ -85,11 +88,14 @@ export default function News() {
     <div className="flex-grow">
       <div className="flex justify-between top">
         <div className="flex items-center">
-          <Link to={"/create-news"}>
-            <button className="bg-bluelight hover:bg-blue1 text-white font-bold py-2 px-4 rounded">
-              Create news
-            </button>
-          </Link>
+          {
+            type == 'Author'&& 
+            <Link to={"/create-news"}>
+              <button className="bg-bluelight hover:bg-blue1 text-white font-bold py-2 px-4 rounded">
+                Create news
+              </button>
+            </Link>
+          }
         </div>
         <div className="flex items-center text-darkblue search">
           <form className="flex items-center text-darkblue" onSubmit={handleSubmit}>
