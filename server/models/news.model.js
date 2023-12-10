@@ -4,10 +4,6 @@ async function getDocList(search, sort, order) {
   search = search || '';
   sort = sort || 'ArPublishDate';
   order = order || 'DESC';
-
-  console.log(sort)
-  console.log(order)
-
   try {
     const [result] = await connection.execute(`
     SELECT

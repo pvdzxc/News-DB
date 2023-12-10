@@ -6,6 +6,7 @@ const  cookieParser = require('cookie-parser');
 const  cors = require('cors');
 
 const newsRoute = require("./routes/news.route")
+const authRoute = require("./routes/auth.route")
 
 const  app = express();
 // app.set('view engine', 'ejs');
@@ -21,6 +22,7 @@ app.use(cors({ origin: "http://localhost:3000" }))
 //   saveUninitialized: true,
 // }));
 
+app.use("/api/auth", authRoute);
 app.use("/api/news", newsRoute);
 
 
