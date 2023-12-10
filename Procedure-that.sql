@@ -199,31 +199,60 @@ select * from article;
 select * from genre;
 CALL FilterArticles ('Tin', null,null,'2023-12-31','Chính trị');
 -- Queries 6: Tìm Article theo từ khoá trong tên
+DROP PROCEDURE if exists SearchArticles;
 DELIMITER //
 
 CREATE PROCEDURE SearchArticles(
-    IN searchKeyword VARCHAR(255)
+    IN searchKeyword VARCHAR(255),
+    IN sortField VARCHAR(255), -- Tên trường để sắp xếp
+    IN sortOrder VARCHAR(4)
 )
 BEGIN
     -- Lựa chọn thông tin bài báo dựa trên từ khóa trong tiêu đề
+    SET searchKeyword = COALESCE(searchKeyword, '');
+    SET sortField = COALESCE(sortField, 'ArPublishDate');
+    SET sortOrder = COALESCE(sortOrder, 'DESC');
     SELECT
-        ArticleID,
-        ArTitle,
-        ArContent,
+        A.ArticleID,
+        A.ArTitle,
+        A.ArContent,
         ArPublishDate,
         ArTotalViews,
         ArTotalLikes,
-        ArTotalShares
+        ArTotalShares,
+        A.AuthorID,
+		M.MLink
     FROM
-        Article
+        Article A
 	JOIN 
-		PublishedArticle ON ArticleID = PublishedArticleID
+		PublishedArticle ON A.ArticleID = PublishedArticleID
+	LEFT JOIN
+        Attach Att ON PublishedArticleID = Att.ArticleID
+    LEFT JOIN
+        Media M ON Att.MediaID = M.MediaID
     WHERE
-        ArTitle LIKE CONCAT('%', searchKeyword, '%');
+        ArTitle LIKE CONCAT('%', searchKeyword, '%')
+	ORDER BY
+        CASE 
+        WHEN sortOrder = 'DESC' THEN
+            CASE 
+                WHEN sortField = 'ArPublishDate' THEN ArPublishDate
+                WHEN sortField = 'ArTotalViews' THEN ArTotalViews
+                WHEN sortField = 'ArTotalLikes' THEN ArTotalLikes
+            END
+    END DESC,
+    CASE 
+        WHEN sortOrder = 'ASC' THEN
+            CASE 
+                WHEN sortField = 'ArPublishDate' THEN ArPublishDate
+                WHEN sortField = 'ArTotalViews' THEN ArTotalViews
+                WHEN sortField = 'ArTotalLikes' THEN ArTotalLikes
+            END
+    END ASC;
 END //
 
 DELIMITER ;
-CALL SearchArticles('ASEAN');
+CALL SearchArticles('', 'arpublishdate', 'desc');
 
 -- Queries 7: Xếp hạng tác giả theo tiền nhuận bút chi trả từ cao nhất xuống thấp nhất trong khoảng thời gian
 DROP PROCEDURE IF EXISTS GetTopAuthorsByProfit;

@@ -204,9 +204,13 @@ INSERT INTO Review_Log (ArticleID, ReviewPhase, ReviewContent) VALUES
 (10,1, 'Nội dung bài viết quá chung chung');
 
 INSERT INTO Edit_log (ArticleID, EditPhase, EditContent) VALUES
-(3, 1, 'Chỉnh lại tên người được phỏng vấn, lọc lại nội dung'),
-(7, 1, 'Chỉnh lại số liệu cập nhật cụ thể hơn, đã thêm phỏng vấn nhỏ'); 
-
+(3, 1, 'Phỏng vấn ông Trang Đình Vương, trưởng ban tổ chức SEAGAMES lần 21
+    ông cho hay rằng, Thế vận hội Đông Nam Á là một sự thành công ngoài sức tưởng tượng, tuy còn nhiều bất cập, nhìn chung đã có sự phối
+    hợp và hỗ trợ lẫn nhau rất tốt của các bộ ban ngành'),
+(7, 1, '80% sinh viên gặp trở ngại trong tâm lí, chủ yếu là các sinh viên 
+    học tập căng thẳng, thiếu người chia sẻ, thiếu người bầu bạn, đặc biệt trong số đó, sinh viên từ trường ĐH Kinh Tế - Luật
+    có vấn đề cao nhất'); 
+select * from article;
 INSERT INTO Media (Mlink) VALUES 
 ('https://tse1.mm.bing.net/th?id=OIP.mzmPJeuwJGTc6FKwRmCA8wHaEo&pid=Api&P=0&h=220'),
 ('https://tse1.mm.bing.net/th?id=OIP.3mqSrPTyTbZo_wV3Qto6CgHaEK&pid=Api&P=0&h=220'),
@@ -214,6 +218,7 @@ INSERT INTO Media (Mlink) VALUES
 
 INSERT INTO Attach (ArticleID, MediaID) VALUES 
 (1,2), (2,1), (4,1), (6,3), (8,2), (9,3), (11, 1);
+INSERT INTO Attach (ArticleID, MediaID) VALUES (5,3);
 -- Xem dữ liệu đã thêm
 SELECT * FROM Article;
 SELECT * from tag;
