@@ -27,6 +27,25 @@ export default function News() {
     fetchData();
   };
 
+  const handleDelete = async (itemId) => {
+    try {
+      // Assuming itemId is the ID of the item you want to delete
+      const response = await axios.delete(`http://localhost:9000/api/news/delete/${itemId}`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.data.success) {
+        fetchData();
+      } else {
+        console.log(response.data.message);
+      }
+    } catch (error) {
+      console.error('Error deleting item:', error);
+    }
+  };
+
+
   const fetchData = async () => {
     const [sort, order] = sortValue.split("-");
     try {
@@ -128,7 +147,7 @@ export default function News() {
       <div className="flex justify-center"></div>
 
       {newsList && newsList.length != 0 ? (
-        <List data={newsList} />
+        <List data={newsList} onDelete={handleDelete}/>
       ) : (
         
         <p className="flex justify-center">There is no news!!!</p>
