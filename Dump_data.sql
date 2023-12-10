@@ -26,7 +26,9 @@ INSERT INTO Employee(EEmailAddress, EName, EPhoneNum, EType, EBankAccount, Branc
     ('tranthuy2212@gmail.com', 'Châu Thị Thuỷ', '0989123456', 'Accountant', '5555222211114444', 1, '2023-07-01'),
     ('havanman@gmail.com', 'Hà Văn Mẫn', '0372126128', 'Manager', '5555222233331111', 2, '2023-08-01'),
     ('vanduong@email.com', 'Bùi Văn Dương', '0231456898', 'Author', '55552222333344441', 3, '2023-09-01'),
-    ('manhhung2302@email.com', 'Trần Mạnh Hùng', '0230156879', 'Author', '55552222333344442', 1, '2023-10-01');    
+    ('manhhung2302@email.com', 'Trần Mạnh Hùng', '0230156879', 'Author', '55552222333344442', 1, '2023-10-01'),  
+    ('author@email.com', 'Nguyễn Văn Author', '2223323333', 'Editor', '5555222333344442', 1, '2023-10-01'),
+    ('editor@email.com', 'Nguyễn Văn Editor', '2222122222', 'Author', '555522352333344442', 1, '2023-10-01');    
 INSERT INTO `User` (Username, UCreatedDate, ULastLogin, UName, UBirthDate, UType, UHasedPassword) VALUES
     ('chienvan', '2023-01-01', CURRENT_TIMESTAMP, 'Trần Văn Chiến', '1990-05-15', 'Author', 'hashed_password_1'),
     ('hoamy', '2023-02-01', CURRENT_TIMESTAMP, 'Nguyễn Thị Mỹ Hoa', '1985-08-22', 'Editor', 'hashed_password_2'),
@@ -67,11 +69,13 @@ INSERT INTO Editor (EditorID, EUserName, ETotalReviewedArticles) VALUES
 	(2, 'hoamy', 0),
     (6, 'minhtrung',0);
 INSERT INTO Author (AuthorID, AUsername) VALUES 
+	(11,'Author'),
 	(1,'chienvan'),
     (3, 'daitrinh1210'),
     (5, 'buithuy'),
     (9, 'vanduong'),
-    (10, 'manhhung');
+    (10, 'manhhung'),
+	(12,'Editor');
 INSERT INTO Reader (RUserName) VALUES
 	('chauminh'),
     ('hieutrung'),

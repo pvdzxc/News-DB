@@ -7,9 +7,10 @@ SELECT * FROM edit_log;
 SELECT * FROM review_log;
 SELECT * FROM Bill;
 SELECT * FROM Accountant;
-SELECT * FROM review_log;
+SELECT * FROM Employee;
 SELECT * FROM Genre;
 SELECT * FROM attach;
+SELECT * FROM Media;
 
 -- DELETE FROM Bill
 -- WHERE BillID < 100;
@@ -21,7 +22,7 @@ SELECT * FROM attach;
 -- WHERE ArticleID < 100;
 -- DELETE FROM article
 -- WHERE ArticleID < 100;
-CALL ProcInsertArticleDebug(99,'bai bao 3', 'so it is', 'Tranh', 10);
+CALL ProcInsertArticle('bai bao 3', 'so it is', 'Tranh', 'author', 'ádấd');
 CALL ProcInsertReviewLog(69,'Bài Viết quá ngắn gọn', 'Edit');
 CALL ProcInsertEditLog(69,'Bạn bè đánh nhau, sứt đầu chảy máo');
 CALL ProcInsertReviewLog(69,'Sai trính tả rôif', 'Edit');

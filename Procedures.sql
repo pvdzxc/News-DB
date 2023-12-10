@@ -18,15 +18,18 @@ DROP PROCEDURE IF EXISTS ProcDeletePublishedArticle;
 
 DELIMITER //
 CREATE PROCEDURE ProcInsertArticle(
-	IN ArTitle VARCHAR(255),
+	IN ArTitle1 VARCHAR(255),
     IN ArContent TEXT,
     IN Genre VARCHAR(255),
-    IN UName INT
+    IN UName TEXT,
+    IN MediaURL VARCHAR(255)
 )
 BEGIN
 	DECLARE Gvalue INT;
 	DECLARE UType INT;
 	DECLARE AID INT;
+	DECLARE ArID INT;
+    DECLARE medID INT;
 	SET Gvalue = -1;
     SET AID = -1;
     SELECT GenreID
@@ -46,8 +49,13 @@ BEGIN
 		SET MESSAGE_TEXT = 'User Error: Author authority unverified';
 	END IF;
     INSERT INTO article (ArTitle, ArContent, GenreID, AuthorID)
-    VALUES (ArTitle, ArContent, Gvalue, AID);
-    
+    VALUES (ArTitle1, ArContent, Gvalue, AID);
+    INSERT INTO Media (MLINK)
+    VALUE (MediaURL);
+    SELECT ArticleID INTO ArID FROM Article WHERE ArTitle = ArTitle1 AND AuthorID = AID;
+    SELECT MediaID INTO medID FROM media WHERE MLINK = MediaURL;
+    INSERT INTO Attach (ArticleID, MediaID)
+    VALUE (ArID, medID);
 END;
 
 CREATE PROCEDURE ProcInsertArticleDebug(
@@ -177,6 +185,14 @@ BEGIN
     SET validArID = -1;
     SELECT ArticleID
     INTO validArID
+    FROM PublishedArticle
+    WHERE PublishedArticleID = ArID;
+	IF validArID <> -1 THEN
+		SIGNAL SQLSTATE '45000'
+		SET MESSAGE_TEXT = 'Logic Error: Article has been published';
+	END IF;
+    SELECT ArticleID
+    INTO validArID
     FROM Article
     WHERE ArticleID = ArID;
 	IF validArID = -1 THEN
@@ -214,28 +230,19 @@ BEGIN
 	DECLARE EID INT; 
 	DECLARE validArID INT;
     SET validArID = -1;
-    SELECT ArticleID
-    INTO validArID
-    FROM Article
-    WHERE ArticleID = ArID;
+    SELECT ArticleID INTO validArID FROM Article WHERE ArticleID = ArID;
 	IF validArID = -1 THEN
 		SIGNAL SQLSTATE '45000'
 		SET MESSAGE_TEXT = '404 Error: Article not found';
 	END IF;
     
     SET EID = -1;
-	SELECT EditorID
-    INTO EID
-    FROM Editor
-    WHERE EUsername = Username;
+	SELECT EditorID INTO EID FROM Editor WHERE EUsername = Username;
 	IF EID = -1 THEN
 		SIGNAL SQLSTATE '45000'
 		SET MESSAGE_TEXT = 'User Error: Editor authority unverified';
 	END IF;
-    SELECT COUNT(*)
-    INTO NumberOfReviewBefore
-    FROM Review_log
-    WHERE ArticleID = ArID;
+    SELECT COUNT(*) INTO NumberOfReviewBefore FROM Review_log WHERE ArticleID = ArID;
 	IF NewArStatus <> 'Accept' AND NewArStatus <> 'Reject' AND NewArStatus <> 'Edit' THEN
 		SIGNAL SQLSTATE '45000'
 		SET MESSAGE_TEXT = 'Status Fail: the status need to be \'Accept\', \'Reject\' or \'Edit\'';
