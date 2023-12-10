@@ -11,10 +11,7 @@ SELECT * FROM Bill;
 SELECT * FROM Accountant;
 SELECT * FROM Employee;
 SELECT * FROM Genre;
-<<<<<<< HEAD
-=======
 SELECT * FROM Topic;
->>>>>>> ecbbb29147843566d1e60fd770176c009bafcc4d
 SELECT * FROM attach;
 SELECT * FROM Media;
 
@@ -28,26 +25,16 @@ SELECT * FROM Media;
 -- WHERE ArticleID < 100;
 -- DELETE FROM article
 -- WHERE ArticleID < 100;
-<<<<<<< HEAD
-CALL ProcInsertArticle('bai bao 3', 'so it is', 'Tranh', 'author', 'ádấd');
-=======
 CALL ProcInsertArticle('bai bao 3', 'so it is', 'Tranh', 'Công nghệ', 'author', 'ádấd');
->>>>>>> ecbbb29147843566d1e60fd770176c009bafcc4d
 CALL ProcInsertReviewLog(69,'Bài Viết quá ngắn gọn', 'Edit');
 CALL ProcInsertEditLog(69,'Bạn bè đánh nhau, sứt đầu chảy máo');
 CALL ProcInsertReviewLog(69,'Sai trính tả rôif', 'Edit');
 CALL ProcInsertEditLog(69,'123 Bạn bè đánh nhao, sứt đầu chảy máo');
 CALL ProcInsertReviewLog(69,'Thoi m nghi luon di', 'Reject');
 CALL ProcInsertReviewLog(96,'Bai viet hay, 10 diem', 'Accept');
-<<<<<<< HEAD
-CALL ProcInsertReviewLog(99,'Nên sửa vài chỗ có vẻ là thiếu', 'Edit', 'hoamy');
-CALL ProcInsertEditLog(99,'ahihi');
-CALL ProcInsertReviewLog(99,'Thôi cũng được', 'Accept', 'hoamy');
-=======
 CALL ProcInsertReviewLog(12,'Nên sửa vài chỗ có vẻ là thiếu', 'Edit', 'minhtrung');
 CALL ProcInsertEditLog(12,'ahihi');
 CALL ProcInsertReviewLog(12,'Thôi cũng được', 'Accept', 'minhtrung');
->>>>>>> ecbbb29147843566d1e60fd770176c009bafcc4d
 CALL ProcDeleteArticle(99);
 CALL ProcInsertComment(99, 'Ôi hay quá', 'chauminh');
 CALL ProcInsertCommentReply(99, 'Ôi hay quá', 'chauminh', 10);

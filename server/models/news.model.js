@@ -54,11 +54,56 @@ async function getNewsGenre(){
   }
 }
 
-async function addNews(username, title,content,imgURL, genre){
+async function getNewsTopic(){
+  try {
+    const [result] = await connection.execute(`
+    SELECT * FROM topic
+    `);
 
+    // Process the query result
+    // console.log(result);
+    return result;
+  } catch (error) {
+    console.error('Error executing query:', error);
+    throw error;
+  }
+}
+
+async function addNews(username, title, content,imgURL, genre, topic){
+  try {
+    const [rows, fields] = await connection.execute('CALL ProcInsertArticle(?, ?, ?, ?, ?, ?)', [
+      title,
+      content,
+      genre,
+      topic,
+      username,
+      imgURL,
+    ]);
+    // rows will contain the result of the stored procedure
+    console.log('Stored Procedure Result:', rows);
+    return true;
+  } catch (error) {
+    console.error('Error executing query:', error);
+    throw error;
+  }
+}
+
+async function deleteNews(ArticleID){
+  try {
+    const [rows, fields] = await connection.execute('CALL ProcDeleteArticle(?)', [ArticleID]);
+    // rows will contain the result of the stored procedure
+    console.log('Stored Procedure Result:', rows);
+    return true;
+  } catch (error) {
+    console.error('Error executing query:', error);
+    throw error;
+  }
 }
 
 module.exports = {
   getDocList,
-  getNewsGenre
+  getNewsGenre,
+  getNewsTopic,
+  addNews,
+  deleteNews
 };

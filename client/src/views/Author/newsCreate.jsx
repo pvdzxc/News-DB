@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useEffect } from 'react';
+import Cookies from 'universal-cookie';
 
 export default function CreateNews() {
+  const cookies = new Cookies();
   const [genre,setGenre] = useState([]);
+  const [topic,setTopic] = useState([]);
   const [newsData, setNewsData] = useState({
     title: '',
     content: '',
     imgUrl: '',
-    genre: ''
+    genre: '',
+    topic: ''
   });
+  const [err,setErr] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,7 +26,24 @@ export default function CreateNews() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+    try {
+      axios.post("http://localhost:9000/api/news/createNews", {data: newsData, username: cookies.get('user')}, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }).then((response)=>{
+        if (response.data.success){
+          console.log("Upload new news successfully");
+          setErr('');
+          window.location.href = "http://localhost:3000/news";
+        } else {
+          console.error("Failed to upload news:", response.data.message);
+          setErr(response.data.message);
+        }
+      })
+    } catch (error) {
+      console.error("Error create news:", error);
+    }
 
 
 
@@ -48,11 +70,30 @@ export default function CreateNews() {
     } catch (error) {
       console.error("Error fetching genre list:", error);
     }
+    try {
+      axios
+        .get(
+          `http://localhost:9000/api/news/news-topic`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((response) => {
+          setTopic(response.data.topic);
+        });
+    } catch (error) {
+      console.error("Error fetching topic list:", error);
+    }
   },[]);
 
   return (
     <div className=" w-full mx-auto bg-white p-6 border-2 rounded-md shadow-md">
       <h2 className="text-2xl font-semibold mb-4">Create News</h2>
+      {err!='' && <div className="text-red font-bold">
+                Error: {err}
+            </div>}
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label htmlFor="title" className="block text-gray-700 text-sm font-bold mb-2">
@@ -111,6 +152,25 @@ export default function CreateNews() {
             {genre.map((genreItem) => (
               <option key={genreItem.GenreID} value={genreItem.GTitle}>
                 {genreItem.GTitle}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="mb-4">
+          <label htmlFor="topic" className="block text-gray-700 text-sm font-bold mb-2">
+            Topic:
+          </label>
+          <select
+            id="topic"
+            name="topic"
+            value={newsData.topic}
+            onChange={handleChange}
+            className="w-full border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
+          >
+            <option value="" disabled>Select a topic</option>
+            {topic.map((topicItem) => (
+              <option key={topicItem.TopicID} value={topicItem.TpTitle}>
+                {topicItem.TpTitle}
               </option>
             ))}
           </select>

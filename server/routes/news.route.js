@@ -7,6 +7,9 @@ const router = express.Router();
 router.get('/', newsController.getNewsList);
 
 router.get('/news-genre', newsController.getNewsGenre)
+router.get('/news-topic', newsController.getNewsTopic)
+router.post('/createNews', newsController.createNews)
+router.delete('/delete/:articleID', newsController.deleteNews)
 
 //router.post('/addNews', newsController.addNews);
 

@@ -21,10 +21,7 @@ CREATE PROCEDURE ProcInsertArticle(
 	IN ArTitle1 VARCHAR(255),
     IN ArContent TEXT,
     IN Genre VARCHAR(255),
-<<<<<<< HEAD
-=======
     IN Topic1 VARCHAR(255),
->>>>>>> ecbbb29147843566d1e60fd770176c009bafcc4d
     IN UName TEXT,
     IN MediaURL VARCHAR(255)
 )
@@ -34,11 +31,8 @@ BEGIN
 	DECLARE AID INT;
 	DECLARE ArID INT;
     DECLARE medID INT;
-<<<<<<< HEAD
-=======
 	DECLARE TopID INT;
     SET TopID = -1;
->>>>>>> ecbbb29147843566d1e60fd770176c009bafcc4d
 	SET Gvalue = -1;
     SET AID = -1;
     SELECT GenreID
@@ -49,8 +43,6 @@ BEGIN
 		SIGNAL SQLSTATE '45000'
 		SET MESSAGE_TEXT = 'Genre Error: Invalid Genre/ Genre not found';
 	END IF;
-<<<<<<< HEAD
-=======
     SELECT TopicID
     INTO TopID
     FROM Topic
@@ -59,7 +51,6 @@ BEGIN
 		SIGNAL SQLSTATE '45000'
 		SET MESSAGE_TEXT = 'Topic Error: Invalid Topic/ Topic not found';
 	END IF;
->>>>>>> ecbbb29147843566d1e60fd770176c009bafcc4d
     SELECT AuthorID
     INTO AID
     FROM Author
@@ -68,14 +59,9 @@ BEGIN
 		SIGNAL SQLSTATE '45000'
 		SET MESSAGE_TEXT = 'User Error: Author authority unverified';
 	END IF;
-<<<<<<< HEAD
-    INSERT INTO article (ArTitle, ArContent, GenreID, AuthorID)
-    VALUES (ArTitle1, ArContent, Gvalue, AID);
-=======
     
     INSERT INTO article (ArTitle, ArContent, GenreID, TopicID, AuthorID)
     VALUES (ArTitle1, ArContent, Gvalue, TopID, AID);
->>>>>>> ecbbb29147843566d1e60fd770176c009bafcc4d
     INSERT INTO Media (MLINK)
     VALUE (MediaURL);
     SELECT ArticleID INTO ArID FROM Article WHERE ArTitle = ArTitle1 AND AuthorID = AID;
@@ -209,11 +195,7 @@ BEGIN
 	DECLARE NumberOfEditBefore INT;
 	DECLARE validArID INT;
     SET validArID = -1;
-<<<<<<< HEAD
-    SELECT ArticleID
-=======
     SELECT PublishedArticleID
->>>>>>> ecbbb29147843566d1e60fd770176c009bafcc4d
     INTO validArID
     FROM PublishedArticle
     WHERE PublishedArticleID = ArID;
@@ -256,32 +238,17 @@ CREATE PROCEDURE ProcInsertReviewLog(
 )
 BEGIN
 	DECLARE NumberOfReviewBefore INT; 
-<<<<<<< HEAD
-	DECLARE EID INT; 
-	DECLARE validArID INT;
-    SET validArID = -1;
-    SELECT ArticleID INTO validArID FROM Article WHERE ArticleID = ArID;
-	IF validArID = -1 THEN
-		SIGNAL SQLSTATE '45000'
-		SET MESSAGE_TEXT = '404 Error: Article not found';
-	END IF;
-    
-    SET EID = -1;
-=======
 	DECLARE EID, Spec, ArTopicID INT; 
 	DECLARE validArID INT;
     SET validArID = -1;
     SET EID = -1;
     SET Spec = -1;
     Set ArTopicID = -2;
->>>>>>> ecbbb29147843566d1e60fd770176c009bafcc4d
 	SELECT EditorID INTO EID FROM Editor WHERE EUsername = Username;
 	IF EID = -1 THEN
 		SIGNAL SQLSTATE '45000'
 		SET MESSAGE_TEXT = 'User Error: Editor authority unverified';
 	END IF;
-<<<<<<< HEAD
-=======
     SELECT ArticleID, TopicID INTO validArID,ArTopicID FROM Article WHERE ArticleID = ArID;
 	IF validArID = -1 THEN
 		SIGNAL SQLSTATE '45000'
@@ -294,7 +261,6 @@ BEGIN
 	END IF;
     
     
->>>>>>> ecbbb29147843566d1e60fd770176c009bafcc4d
     SELECT COUNT(*) INTO NumberOfReviewBefore FROM Review_log WHERE ArticleID = ArID;
 	IF NewArStatus <> 'Accept' AND NewArStatus <> 'Reject' AND NewArStatus <> 'Edit' THEN
 		SIGNAL SQLSTATE '45000'
