@@ -314,7 +314,6 @@ END //
 DELIMITER ;
 CALL GetRecentCommentThroughArticleID(8);
 -- -===========Query 9 ===============
-
 DROP PROCEDURE IF EXISTS GetEditLogThroughArticleID;
 DELIMITER //
 CREATE PROCEDURE GetEditLogThroughArticleID(IN ID int)
@@ -346,5 +345,37 @@ BEGIN
 END //
 DELIMITER ;
 CALL GetReviewLogThroughArticleID(2);
+
+DELIMITER //
+CREATE PROCEDURE GetArticleDetailByArticleID(
+	IN ArID INT
+)
+BEGIN
+ SELECT
+    A.ArticleID,
+    A.ArTitle,
+    A.ArContent,
+    PA.ArPublishDate,
+    PA.ArTotalViews,
+    PA.ArTotalLikes,
+    PA.ArTotalShares,
+    A.AuthorID,
+    M.MLink,
+    Au.AUsername
+    FROM
+        Article A
+    JOIN 
+        PublishedArticle PA ON A.ArticleID = PA.PublishedArticleID
+    LEFT JOIN
+        Attach AT ON A.ArticleID = AT.ArticleID
+    LEFT JOIN
+        Media M ON AT.MediaID = M.MediaID
+	LEFT JOIN 
+		Author Au ON A.AuthorID = Au.AuthorID
+      WHERE
+        A.ArticleID = ArID;
+END//
+DELIMITER ;
+CALL GetArticleDetailByArticleID (3);
 
 

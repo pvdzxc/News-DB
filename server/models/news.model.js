@@ -2,7 +2,7 @@ const connection = require("../config/database");
 
 async function getDocList(search, sort, order) {
   try {
-    const [result] = await connection.execute(`CALL SearchArticles('${search}', '${sort}', '${order}')`)
+    const [result] = await connection.execute(`CALL SearchArticles('${search}', '${sort}', '${order}')`);
     return result[0];
   } catch (error) {
     console.error('Error executing query:', error);
@@ -12,35 +12,11 @@ async function getDocList(search, sort, order) {
 
 async function getArticleById(articleID){
   try {
-    const [result] = await connection.execute(`
-    SELECT
-    A.ArticleID,
-    A.ArTitle,
-    A.ArContent,
-    PA.ArPublishDate,
-    PA.ArTotalViews,
-    PA.ArTotalLikes,
-    PA.ArTotalShares,
-    A.AuthorID,
-    M.MLink,
-    Au.AUsername
-    FROM
-        Article A
-    JOIN 
-        PublishedArticle PA ON A.ArticleID = PA.PublishedArticleID
-    LEFT JOIN
-        Attach AT ON A.ArticleID = AT.ArticleID
-    LEFT JOIN
-        Media M ON AT.MediaID = M.MediaID
-	LEFT JOIN 
-		Author Au ON A.AuthorID = Au.AuthorID
-      WHERE
-        A.ArticleID = ?
-    `, [articleID]);
+    const [result] = await connection.execute( 'CALL GetArticleDetailByArticleID (?)',[articleID]);
 
     // Process the query result
     //console.log(result);
-    return result;
+    return result[0];
   } catch (error) {
     console.error('Error executing query:', error);
     throw error;
