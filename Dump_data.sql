@@ -38,7 +38,12 @@ INSERT INTO `User` (Username, UCreatedDate, ULastLogin, UName, UBirthDate, UType
     ('minhtrung', '2023-05-01', CURRENT_TIMESTAMP, 'Lê Minh Trung', '1975-11-08', 'Editor', 'hashed_password_8'),
     ('vanduong', '2023-05-05', CURRENT_TIMESTAMP, 'Bùi Văn Dương', '1968-12-09', 'Author', 'hashed_password_9'),
     ('manhhung', '2023-05-09', CURRENT_TIMESTAMP, 'Trần Mạnh Hùng', '1986-10-04', 'Author', 'hashed_password_10');
-    
+INSERT INTO `user` VALUES ('author','2023-12-10','2023-12-10 04:38:49','Author','2004-01-28','Author','$2b$10$2A340o4s3JQjCHZ0oNLDyeEzmpEv.7pZ.pVZ6ORimNysKy67pjCJ2'),
+	('editor','2023-12-10','2023-12-10 04:42:17','Editor','2003-01-01','Editor','$2b$10$VyseIhXGkII.5qMrV5eKrujvc7RpuRKCJEuTqhqrDuXR9EGeJO1Ea'),
+	('khanh','2023-12-10','2023-12-10 03:48:15','TLQKhanh','2023-12-07','Reader','$2b$10$njkixXmRWfQXippvbuL3eu7JjwgmK7OgoX2m.U94k4bYwFQUykHxu'),
+	('kiwi','2023-12-10','2023-12-10 03:45:08','TLQKhanh','2023-12-01','Reader','$2b$10$TC7Mb.2UBDiE68s7qhDs1.j/THmngZv8AHrlqmZzLcZLKp7tWSm.u'),
+	('tlqkhanh','2023-12-10','2023-12-10 03:46:38','TLQKhanh','2023-12-01','Reader','$2b$10$RBSaRQ3pdDcGQokW/TKqQuVRuNUpwmAYnChEsl36WpgGMDzSoeunq');
+
 INSERT INTO BankAccount (EmployeeID, BankAccount) VALUES
     (1, '123456789'),
     (2, '987654321'),
