@@ -10,6 +10,7 @@ router.get('/news-genre', newsController.getNewsGenre)
 router.get('/news-topic', newsController.getNewsTopic)
 router.post('/createNews', newsController.createNews)
 router.delete('/delete/:articleID', newsController.deleteNews)
+router.get('/detail/:articleID', newsController.getNewsById)
 
 //router.post('/addNews', newsController.addNews);
 

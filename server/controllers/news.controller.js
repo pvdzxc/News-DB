@@ -11,7 +11,18 @@ async function getNewsList(req,res){
         console.log(error);
         return res.json({ status: 500 });
     }
-    
+}
+
+async function getNewsById(req,res){
+    const articleID = req.params.articleID;
+    try {
+        const result = await news_model.getArticleById(articleID);
+        if (result.length===0) return res.json({ success: false, message: "Article is not existed" });
+        return res.json({success: true, article: result[0] })
+    } catch (error) {
+        console.log(error);
+        return res.json({ status: 500 });
+    }
 }
 
 function addPostToDB(data){
@@ -85,4 +96,5 @@ module.exports = {
     getNewsTopic: getNewsTopic,
     createNews: createNews,
     deleteNews: deleteNews,
+    getNewsById: getNewsById
 }
